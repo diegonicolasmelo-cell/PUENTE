@@ -25,7 +25,7 @@ const readAsset = (href) => {
 };
 
 // CSS → <style>
-html = html.replace(/<link\s+rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g, (_, href) => `<style>\n${readAsset(href)}\n</style>`);
+html = html.replace(/<link\s+rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g, (tag, href) => (/^https?:/.test(href) ? tag : `<style>\n${readAsset(href)}\n</style>`));
 // JS (módulo único) → <script type="module">
 html = html.replace(/<script\s+type="module"[^>]*src="([^"]+)"[^>]*><\/script>/g, (_, href) => {
   const js = readAsset(href).replace(/<\/script/gi, "<\\/script");
