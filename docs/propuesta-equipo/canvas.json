@@ -1,9 +1,9 @@
 {
   "artboards": [
     { "file": "Main.dc.html",     "title": "Tablero del servicio (equipo, escritorio)", "x": 0,    "y": 0,    "w": 1440, "h": 900 },
-    { "file": "Paciente.dc.html", "title": "Detalle del paciente (equipo, escritorio)", "x": 1560, "y": 0,    "w": 1440, "h": 960 },
+    { "file": "Paciente.dc.html", "title": "Detalle del paciente (equipo, escritorio)", "x": 1560, "y": 0,    "w": 1440, "h": 1000 },
     { "file": "Familia.dc.html",  "title": "Inicio de la familia con avisos (teléfono)",  "x": 0,    "y": 1120, "w": 390,  "h": 844 },
-    { "file": "Perfil.dc.html",   "title": "Perfil del profesional",                    "x": 520,  "y": 1120, "w": 560,  "h": 820 }
+    { "file": "Perfil.dc.html",   "title": "Perfil del profesional",                    "x": 520,  "y": 1120, "w": 560,  "h": 870 }
   ],
   "annotations": [
     { "id": "nota-alcance",  "x": 0,    "y": -170, "w": 460, "text": "ALCANCE POR SERVICIO\nCada profesional figura en la hoja Profesionales con su correo, rol y servicio. El servidor filtra los pacientes por ese servicio; el navegador nunca decide qué ve. Un profesional de UCI Adultos no ve UCI Pediátrica ni el total de usuarios." },
