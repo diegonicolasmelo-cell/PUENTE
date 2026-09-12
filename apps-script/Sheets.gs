@@ -4,19 +4,25 @@
  */
 var SHEETS = {
   pacientes: "Pacientes", familia: "Familia", etapas: "Etapas", faq: "FAQ", videos: "Videos", config: "Config", log: "Log",
+  servicios: "Servicios", profesionales: "Profesionales", solicitudes: "Solicitudes", mensajes: "Mensajes",
 };
 
 var HEADERS = {
   pacientes: ["id", "codigo", "creado", "actualizado", "etapa", "estado",
     "familiar_nombre", "familiar_whatsapp", "paciente_nombre", "apodo", "ocupacion", "educacion",
     "gustos", "musica_otro", "musica_favorita", "deporte_otro", "cotidiano_otro", "comentario",
-    "ayudas_tecnicas", "vive_con", "vive_donde", "zona", "mensaje_familia", "tarjeta_aprobada", "checklist", "prefs"],
+    "ayudas_tecnicas", "vive_con", "vive_donde", "zona", "mensaje_familia", "tarjeta_aprobada", "checklist", "prefs",
+    "servicio_id", "cama", "ingreso", "registrado_por"],
   familia: ["paciente_id", "nodo_id", "nombre", "vinculo", "vinculo_otro", "generacion", "columna", "emoji", "foto", "fijo"],
   etapas: ["id", "etiqueta", "subtitulo", "descripcion"],
   faq: ["categoria", "tag", "pregunta", "respuesta", "orden"],
   videos: ["emoji", "titulo", "descripcion", "duracion", "url", "orden"],
   config: ["clave", "valor"],
-  log: ["fecha", "accion", "paciente_id", "detalle"],
+  log: ["fecha", "accion", "paciente_id", "detalle", "actor"],
+  servicios: ["id", "nombre", "piso", "clave_acceso", "telefono", "horario_visitas", "hora_informe", "sala", "activo"],
+  profesionales: ["id", "servicio_id", "nombre", "rol", "turno", "email", "token", "activo", "creado", "ultimo_acceso"],
+  solicitudes: ["id", "paciente_id", "servicio_id", "tipo", "texto", "nota", "prioridad", "estado", "creado_por", "creado_en", "respondido_en", "respuesta", "recibido_por", "recibido_en"],
+  mensajes: ["id", "paciente_id", "origen", "autor", "texto", "creado_en", "leido_en"],
 };
 
 var LIST_SEP = " | ";
@@ -80,6 +86,8 @@ function setupSpreadsheet() {
   seedIfEmpty_(ss.getSheetByName(SHEETS.faq), SEED_FAQ.map(function (f, i) { return [f.categoria, f.tag || "", f.q, f.a, i + 1]; }));
   seedIfEmpty_(ss.getSheetByName(SHEETS.videos), SEED_VIDEOS.map(function (v, i) { return [v.emoji, v.title, v.desc, v.dur, v.url || "", i + 1]; }));
   seedIfEmpty_(ss.getSheetByName(SHEETS.config), Object.keys(SEED_CONFIG).map(function (k) { return [k, SEED_CONFIG[k]]; }));
+  // Servicio de demostración: cambia la clave de acceso antes de usarlo con el equipo real.
+  seedIfEmpty_(ss.getSheetByName(SHEETS.servicios), [["UCIA", "UCI Adultos", "4", "DEMO-2026", "", "", "", "", "TRUE"]]);
   var first = ss.getSheetByName(SHEETS.pacientes);
   if (ss.getSheets()[0].getName() !== SHEETS.pacientes) ss.setActiveSheet(first) && ss.moveActiveSheet(1);
   var extra = ss.getSheetByName("Hoja 1") || ss.getSheetByName("Sheet1");
@@ -148,6 +156,7 @@ function profileToRecord_(profile, base) {
     vive_donde: profile.livesWhere, zona: profile.zonaType, mensaje_familia: profile.familyMessage,
     tarjeta_aprobada: !!profile.idCardApproved, checklist: joinList_(checklist),
     prefs: profile.prefs && typeof profile.prefs === "object" ? profile.prefs : {},
+    servicio_id: base.servicio_id, cama: base.cama, ingreso: base.ingreso, registrado_por: base.registrado_por,
   };
 }
 
@@ -176,7 +185,7 @@ function appendPatientRow_(profile, base) {
 }
 
 /** Columnas que solo edita el equipo desde la planilla: nunca las sobrescribe la app. */
-var STAFF_COLUMNS = { id: 1, codigo: 1, creado: 1, etapa: 1, estado: 1 };
+var STAFF_COLUMNS = { id: 1, codigo: 1, creado: 1, etapa: 1, estado: 1, servicio_id: 1, cama: 1, ingreso: 1, registrado_por: 1 };
 
 function updatePatientRow_(rowNumber, profile, now) {
   var sheet = getSheet_("pacientes");
@@ -307,8 +316,68 @@ function readConfig_() {
 
 // ─── Log ────────────────────────────────────────────────────────────────────
 
-function logEvent_(action, patientId, detail) {
+function logEvent_(action, patientId, detail, actor) {
   try {
-    getSheet_("log").appendRow([new Date().toISOString(), action, patientId || "", String(detail || "").slice(0, 500)]);
+    getSheet_("log").appendRow([new Date().toISOString(), action, patientId || "", String(detail || "").slice(0, 500), actor || "familia"]);
   } catch (e) { /* el log nunca bloquea una operación */ }
 }
+
+// ─── Helpers genéricos de tabla (usados por Staff.gs) ───────────────────────
+
+function nowIso_() { return new Date().toISOString(); }
+function newId_() { return Utilities.getUuid(); }
+function randomToken_(n) {
+  var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", out = "";
+  for (var i = 0; i < (n || 32); i++) out += chars.charAt(Math.floor(Math.random() * chars.length));
+  return out;
+}
+
+/** Filas de una hoja con su número de fila: [{ row, rec }]. */
+function tableRows_(key) {
+  var sheet = getSheet_(key);
+  if (sheet.getLastRow() < 2) return [];
+  var idx = headerIndex_(sheet);
+  var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, Math.max(sheet.getLastColumn(), 1)).getValues();
+  var out = [];
+  values.forEach(function (row, i) {
+    var rec = rowToRecord_(row, idx);
+    if (Object.keys(rec).some(function (k) { return String(rec[k]).trim() !== ""; })) out.push({ row: i + 2, rec: rec });
+  });
+  return out;
+}
+
+/** Primera fila cuya columna coincide exactamente (sin distinguir mayúsculas). */
+function findRowBy_(key, column, value) {
+  var sheet = getSheet_(key);
+  var idx = headerIndex_(sheet);
+  if (idx[column] == null || sheet.getLastRow() < 2 || value == null || String(value) === "") return null;
+  var found = sheet.getRange(2, idx[column] + 1, sheet.getLastRow() - 1, 1).createTextFinder(String(value)).matchEntireCell(true).matchCase(false).findNext();
+  if (!found) return null;
+  var r = found.getRow();
+  var row = sheet.getRange(r, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
+  return { row: r, rec: rowToRecord_(row, idx) };
+}
+
+function appendRecord_(key, rec) {
+  var sheet = getSheet_(key);
+  var idx = headerIndex_(sheet);
+  var width = Math.max(sheet.getLastColumn(), HEADERS[key].length);
+  var row = new Array(width).fill("");
+  Object.keys(rec).forEach(function (k) { if (idx[k] != null) row[idx[k]] = cell_(rec[k]); });
+  sheet.appendRow(row);
+  return rec;
+}
+
+/** Actualiza solo las columnas presentes en `patch` de una fila. */
+function updateRow_(key, rowNumber, patch) {
+  var sheet = getSheet_(key);
+  var idx = headerIndex_(sheet);
+  var width = Math.max(sheet.getLastColumn(), HEADERS[key].length);
+  var range = sheet.getRange(rowNumber, 1, 1, width);
+  var row = range.getValues()[0];
+  Object.keys(patch).forEach(function (k) { if (idx[k] != null) row[idx[k]] = cell_(patch[k]); });
+  range.setValues([row]);
+  return rowToRecord_(row, idx);
+}
+
+function findPatientById_(id) { return findRowBy_("pacientes", "id", id); }

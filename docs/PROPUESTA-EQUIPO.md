@@ -1,7 +1,12 @@
 # Propuesta: perfil del profesional e interacción familia ↔ equipo
 
 > Complementa `DISENO.md`. Mockup navegable en el lienzo de diseño (enlace en la conversación) y
-> fuentes del mockup en `docs/propuesta-equipo/`. Estado: **propuesta, no implementada**.
+> fuentes del mockup en `docs/propuesta-equipo/`.
+>
+> **Estado: implementada en modo de prueba** (12 sep 2026). Decisiones tomadas: sin Google Workspace,
+> acceso del equipo por clave de servicio (demo); la familia se registra con el QR del servicio; lista de
+> insumos propuesta; mensajes abiertos para evaluar en las pruebas. Lo que sigue vigente de este
+> documento es el diseño; la operación está en `DESPLIEGUE.md` (secciones A.5b y B2).
 
 ## 1. Qué se agrega y por qué
 
@@ -94,7 +99,17 @@ rechaza cualquier paciente de otro servicio.
 3. **Mensajes y resumen por correo** (1 sprint): hilo por paciente, badges, disparador diario.
 4. **Después**: QR por servicio, push, métricas del servicio (tiempo de respuesta, pedidos por semana).
 
-## 9. Decisiones que necesito de ti
+## 9. Decisiones tomadas (12 sep 2026)
+
+1. **Sin Workspace → modo demo**: clave de acceso por servicio (`Servicios.clave_acceso`) + nombre y rol.
+   El backend emite un token por profesional (`Profesionales.token`) que firma cada acción y queda en Log.
+   Cuando exista cuenta institucional, solo cambia `requireStaff_` en `Staff.gs`.
+2. **Registro por la familia con QR del servicio** (`?s=<id>`); el registro por el equipo queda disponible como
+   respaldo. Los perfiles sin servicio aparecen en el tablero para asignarlos con un clic.
+3. **Insumos**: la lista propuesta, editable en `web/src/equipo/api.js` (`INSUMOS`).
+4. **Mensajes libres** activos en ambos sentidos, con aviso de "no es un canal de urgencias"; se evalúan en las pruebas.
+
+## 9 bis. Decisiones originales planteadas
 
 1. ¿El hospital usa Google Workspace (correo institucional en Google)? Define la vía de acceso.
 2. ¿Quién registra al paciente: el equipo (recomendado) o la familia con QR?

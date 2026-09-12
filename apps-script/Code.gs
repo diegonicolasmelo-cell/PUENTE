@@ -8,14 +8,14 @@
  *
  * Respuestas: { ok: true, data } | { ok: false, error, code }
  */
-var APP_VERSION = "1.0.0";
+var APP_VERSION = "1.1.0";
 
 function doGet(e) {
   var p = (e && e.parameter) || {};
   if (p.action) {
-    var allowed = { ping: true, getContent: true };
+    var allowed = { ping: true, getContent: true, getServicio: true };
     if (!allowed[p.action]) return jsonOutput_(fail_("Esta acción requiere POST", "method"));
-    return jsonOutput_(handleRequest_({ action: p.action }));
+    return jsonOutput_(handleRequest_({ action: p.action, servicioId: p.servicioId || p.s || "" }));
   }
   try {
     return HtmlService.createHtmlOutputFromFile("Index")
@@ -53,10 +53,29 @@ function handleRequest_(req) {
   try {
     switch (action) {
       case "ping":          return ok_({ time: new Date().toISOString(), version: APP_VERSION });
-      case "getContent":    return ok_(getContent_());
-      case "createProfile": return ok_(createProfile_(req.profile, req.family));
+      case "getContent":    return ok_(getContent_(req.servicioId));
+      case "getServicio":   return ok_(getServicio_(req.servicioId));
+      case "createProfile": return ok_(createProfile_(req.profile, req.family, req.servicioId));
       case "getProfile":    return ok_(getProfile_(req.code));
       case "updateProfile": return ok_(updateProfile_(req.code, req.profile, req.family));
+      case "setServicio":   return ok_(setServicio_(req.code, req.servicioId));
+      // Interacción familia → equipo
+      case "respondRequest":     return ok_(respondRequest_(req.code, req.requestId, req.respuesta));
+      case "familySendMessage":  return ok_(familySendMessage_(req.code, req.texto));
+      case "familyReadMessages": return ok_(familyReadMessages_(req.code));
+      // Panel del equipo (modo demo: clave de servicio + token por profesional)
+      case "staffLogin":           return ok_(staffLogin_(req.clave, req.nombre, req.rol, req.turno));
+      case "staffMe":              return ok_(staffMe_(req.token));
+      case "staffUpdateMe":        return ok_(staffUpdateMe_(req.token, req));
+      case "staffBoard":           return ok_(staffBoard_(req.token));
+      case "staffPatient":         return ok_(staffPatient_(req.token, req.patientId));
+      case "staffUpdatePatient":   return ok_(staffUpdatePatient_(req.token, req.patientId, req));
+      case "staffRegisterPatient": return ok_(staffRegisterPatient_(req.token, req));
+      case "staffCreateRequest":   return ok_(staffCreateRequest_(req.token, req.patientId, req));
+      case "staffUpdateRequest":   return ok_(staffUpdateRequest_(req.token, req.requestId, req.estado));
+      case "staffSendMessage":     return ok_(staffSendMessage_(req.token, req.patientId, req.texto));
+      case "staffRequests":        return ok_(staffRequests_(req.token));
+      case "staffThreads":         return ok_(staffThreads_(req.token));
       default:              return fail_("Acción desconocida: " + action, "bad_request");
     }
   } catch (err) {
@@ -81,9 +100,10 @@ function jsonOutput_(obj) {
 
 // ─── Contenido editable (Etapas, FAQ, Videos, Config) ───────────────────────
 
-function getContent_() {
+function getContent_(servicioId) {
   var cache = CacheService.getScriptCache();
-  var cached = cache.get("content_v1");
+  var key = "content_v1_" + String(servicioId || "");
+  var cached = cache.get(key);
   if (cached) { try { return JSON.parse(cached); } catch (e) { /* recalcular */ } }
   var content = {
     etapas: readEtapas_(),
@@ -92,27 +112,47 @@ function getContent_() {
     config: readConfig_(),
     version: new Date().toISOString(),
   };
-  try { cache.put("content_v1", JSON.stringify(content), 300); } catch (e) { /* >100KB: sin caché */ }
+  // Un servicio puede sobrescribir horario, sala, teléfono y hora de informe
+  var servicio = servicioId ? findServicio_(servicioId) : null;
+  if (servicio) {
+    content.config.nombre_unidad = servicio.nombre;
+    if (servicio.horario_visitas) content.config.horario_visitas = servicio.horario_visitas;
+    if (servicio.sala) content.config.sala = servicio.sala;
+    if (servicio.telefono) content.config.telefono_uci = servicio.telefono;
+    if (servicio.hora_informe) content.config.hora_informe = servicio.hora_informe;
+    content.servicio = publicServicio_(servicio);
+  }
+  try { cache.put(key, JSON.stringify(content), 300); } catch (e) { /* >100KB: sin caché */ }
   return content;
 }
 
 // ─── Perfiles ───────────────────────────────────────────────────────────────
 
-function createProfile_(profile, family) {
+function createProfile_(profile, family, servicioId) {
   profile = profile || {};
   if (!String(profile.patName || "").trim()) throw apiError_("Falta el nombre del paciente", "validation");
   if (!String(profile.famName || "").trim()) throw apiError_("Falta el nombre del familiar", "validation");
+  var servicio = servicioId ? findServicio_(servicioId) : null;   // un QR inválido no bloquea el registro
+  var created = insertPatient_(profile, family, { servicio_id: servicio ? servicio.id : "", registrado_por: "familia" });
+  logEvent_("createProfile", created.patientId, profile.patName + (servicio ? " · " + servicio.nombre : ""));
+  created.servicio = servicio ? publicServicio_(servicio) : null;
+  return created;
+}
+
+/** Inserta un paciente (usado por la familia y por el panel del equipo). */
+function insertPatient_(profile, family, extra) {
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
     var id = Utilities.getUuid();
     var code = generateUniqueCode_();
     var now = new Date().toISOString();
-    var base = { id: id, codigo: code, creado: now, actualizado: now, etapa: 1, estado: "activo" };
+    var base = { id: id, codigo: code, creado: now, actualizado: now, etapa: 1, estado: "activo",
+      servicio_id: (extra && extra.servicio_id) || "", cama: (extra && extra.cama) || "", ingreso: now.slice(0, 10),
+      registrado_por: (extra && extra.registrado_por) || "familia" };
     appendPatientRow_(profile, base);
-    writeFamily_(id, family);
-    logEvent_("createProfile", id, profile.patName);
-    return { code: code, patientId: id, etapa: 1, estado: "activo", updatedAt: now };
+    writeFamily_(id, family || []);
+    return { code: code, patientId: id, etapa: 1, estado: "activo", updatedAt: now, cama: base.cama };
   } finally {
     lock.releaseLock();
   }
@@ -123,6 +163,8 @@ function getProfile_(code) {
   if (!hit) throw apiError_("Código no encontrado", "not_found");
   var rec = hit.record;
   logEvent_("getProfile", rec.id, "");
+  var extras = patientExtras_(rec.id);
+  var servicio = rec.servicio_id ? findServicio_(rec.servicio_id) : null;
   return {
     code: rec.codigo,
     patientId: rec.id,
@@ -131,6 +173,11 @@ function getProfile_(code) {
     updatedAt: rec.actualizado || rec.creado || "",
     profile: recordToProfile_(rec),
     family: readFamily_(rec.id),
+    servicio: servicio ? publicServicio_(servicio) : null,
+    cama: rec.cama || "",
+    solicitudes: extras.solicitudes,
+    mensajes: extras.mensajes,
+    noLeidos: extras.noLeidos,
   };
 }
 
@@ -144,7 +191,9 @@ function updateProfile_(code, profile, family) {
     updatePatientRow_(hit.row, profile || {}, now);
     if (family) writeFamily_(hit.record.id, family);
     logEvent_("updateProfile", hit.record.id, "");
-    return { updatedAt: now, etapa: normalizeStage_(hit.record.etapa), estado: hit.record.estado || "activo", code: hit.record.codigo, patientId: hit.record.id };
+    var servicio = hit.record.servicio_id ? findServicio_(hit.record.servicio_id) : null;
+    return { updatedAt: now, etapa: normalizeStage_(hit.record.etapa), estado: hit.record.estado || "activo", code: hit.record.codigo, patientId: hit.record.id,
+      cama: hit.record.cama || "", servicio: servicio ? publicServicio_(servicio) : null };
   } finally {
     lock.releaseLock();
   }

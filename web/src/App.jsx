@@ -14,7 +14,17 @@ import { normalizeForm, normalizeTree, buildPayload } from "./lib/profile.js";
 import { normalizeStage } from "./lib/journey.js";
 
 const DEFAULT_CONTENT = { etapas: JOURNEY_STEPS, faq: FAQ_DATA, videos: VIDEOS, config: CONFIG_DEFAULTS, version: "local" };
-const EMPTY_SESSION = { code: null, patientId: null, etapa: 1, estado: "activo", updatedAt: null };
+const EMPTY_SESSION = { code: null, patientId: null, etapa: 1, estado: "activo", updatedAt: null, servicioId: "", servicio: null, cama: "", solicitudes: [], mensajes: [], noLeidos: 0 };
+
+/** El QR de cada servicio abre la app con ?s=<id>; se guarda y se limpia de la URL. */
+function readServicioFromUrl() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const s = (params.get("s") || params.get("servicio") || "").trim();
+    if (s) window.history.replaceState(null, "", window.location.pathname + window.location.hash);
+    return s;
+  } catch (_) { return ""; }
+}
 const REFRESH_MS = 5 * 60 * 1000;
 
 /** Acepta el contenido remoto solo si tiene la forma esperada; lo demás se completa con los valores por defecto. */
@@ -69,6 +79,12 @@ export default function App() {
       etapa: normalizeStage(data.etapa, s.etapa),
       estado: data.estado || s.estado,
       updatedAt: data.updatedAt || s.updatedAt,
+      servicio: data.servicio || s.servicio,
+      servicioId: (data.servicio && data.servicio.id) || s.servicioId,
+      cama: data.cama != null ? data.cama : s.cama,
+      solicitudes: Array.isArray(data.solicitudes) ? data.solicitudes : s.solicitudes,
+      mensajes: Array.isArray(data.mensajes) ? data.mensajes : s.mensajes,
+      noLeidos: typeof data.noLeidos === "number" ? data.noLeidos : s.noLeidos,
     }));
   }, []);
 
@@ -83,8 +99,9 @@ export default function App() {
     try {
       let data;
       if (cur.session.code) data = await callApi("updateProfile", { code: cur.session.code, ...payload });
-      else data = await callApi("createProfile", payload);
-      setSession((s) => ({ ...s, code: data.code || s.code, patientId: data.patientId || s.patientId, etapa: normalizeStage(data.etapa, s.etapa), estado: data.estado || s.estado, updatedAt: data.updatedAt || new Date().toISOString() }));
+      else data = await callApi("createProfile", { ...payload, servicioId: cur.session.servicioId || "" });
+      setSession((s) => ({ ...s, code: data.code || s.code, patientId: data.patientId || s.patientId, etapa: normalizeStage(data.etapa, s.etapa), estado: data.estado || s.estado, updatedAt: data.updatedAt || new Date().toISOString(),
+        servicio: data.servicio || s.servicio, servicioId: (data.servicio && data.servicio.id) || s.servicioId, cama: data.cama != null ? data.cama : s.cama }));
       saveJSON(KEYS.pending, false);
       setSync((s) => ({ ...s, busy: false, pending: false, lastError: null }));
       return true;
@@ -105,10 +122,10 @@ export default function App() {
     }
   }, [mode, showToast]);
 
-  const refreshContent = useCallback(async () => {
+  const refreshContent = useCallback(async (servicioIdArg) => {
     if (mode === "local") return;
     try {
-      const data = await callApi("getContent");
+      const data = await callApi("getContent", { servicioId: servicioIdArg != null ? servicioIdArg : (latest.current.session.servicioId || "") });
       const merged = mergeContent(data);
       setContent(merged);
       saveJSON(KEYS.content, merged);
@@ -139,14 +156,29 @@ export default function App() {
       setChecklist(savedProfile.checklist || {});
       setPrefs((p) => ({ ...p, ...(savedProfile.prefs || {}) }));
     }
-    if (savedSession) setSession({ ...EMPTY_SESSION, ...savedSession });
+    const servicioFromQr = readServicioFromUrl();
+    const mergedSession = { ...EMPTY_SESSION, ...(savedSession || {}) };
+    if (servicioFromQr) mergedSession.servicioId = servicioFromQr;
+    if (savedSession || servicioFromQr) setSession(mergedSession);
+    // Perfil creado antes de escanear el QR: se asigna al servicio ahora
+    if (servicioFromQr && savedSession && savedSession.code && (!savedSession.servicioId || savedSession.servicioId !== servicioFromQr) && getMode() !== "local") {
+      callApi("setServicio", { code: savedSession.code, servicioId: servicioFromQr }).then((d) => { if (d && d.servicio) setSession((x) => ({ ...x, servicio: d.servicio, servicioId: d.servicio.id })); }).catch(() => {});
+    }
     const entered = !!(savedProfile && savedProfile.form && savedProfile.form.patName && (savedSession && (savedSession.code || savedSession.entered)));
     setPhase(entered ? "app" : "onboarding");
-    refreshContent();
+    refreshContent(mergedSession.servicioId || "");
     if (savedSession && savedSession.code) refreshProfile(savedSession.code);   // código explícito: el estado aún no se ha vuelto a renderizar
     else if (entered && loadJSON(KEYS.pending, false)) setTimeout(() => syncNow(), 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Cuando cambia el servicio (QR, registro o recuperación), el contenido pasa a ser el de ese servicio
+  const servicioIdRef = useRef(session.servicioId);
+  useEffect(() => {
+    if (phase === "boot" || session.servicioId === servicioIdRef.current) return;
+    servicioIdRef.current = session.servicioId;
+    refreshContent(session.servicioId || "");
+  }, [session.servicioId, phase, refreshContent]);
 
   // ── Persistencia local ──
   useEffect(() => { if (phase !== "boot") saveJSON(KEYS.profile, { form, treeNodes, checklist, prefs }); }, [form, treeNodes, checklist, prefs, phase]);
@@ -192,6 +224,33 @@ export default function App() {
     showToast(ok ? "✅ Cambios guardados" : mode === "local" ? "✅ Guardado en este dispositivo" : "💾 Guardado aquí; se subirá al reconectar");
   }, [syncNow, showToast, mode]);
 
+  // ── Interacción con el equipo ──
+  const withBackend = useCallback(async (fn) => {
+    if (mode === "local") { showToast("📶 Esta función necesita conexión con el servidor"); return null; }
+    const { session: s } = latest.current;
+    if (!s.code) { showToast("⚠️ Tu perfil aún no está en el servidor"); return null; }
+    try { return await fn(s.code); }
+    catch (e) { showToast(e.code === "network" || e.code === "timeout" ? "📶 Sin conexión con el servidor" : `⚠️ ${e.message}`); return null; }
+  }, [mode, showToast]);
+
+  const respondRequest = useCallback(async (requestId, respuesta) => {
+    const data = await withBackend((code) => callApi("respondRequest", { code, requestId, respuesta }));
+    if (data) { setSession((s) => ({ ...s, solicitudes: data.solicitudes || s.solicitudes })); showToast(respuesta === "en_camino" ? "💙 El equipo sabrá que lo llevas" : "Avisamos al equipo"); }
+  }, [withBackend, showToast]);
+
+  const sendMessage = useCallback(async (texto) => {
+    const data = await withBackend((code) => callApi("familySendMessage", { code, texto }));
+    if (data) setSession((s) => ({ ...s, mensajes: data.mensajes || s.mensajes }));
+    return !!data;
+  }, [withBackend]);
+
+  const readMessages = useCallback(async () => {
+    const { session: s } = latest.current;
+    if (!s.noLeidos) return;
+    setSession((x) => ({ ...x, noLeidos: 0 }));
+    if (mode !== "local" && s.code) callApi("familyReadMessages", { code: s.code }).catch(() => {});
+  }, [mode]);
+
   const logout = useCallback(() => {
     clearAll();
     setForm(normalizeForm(EMPTY_FORM));
@@ -222,6 +281,7 @@ export default function App() {
       form={form} treeNodes={treeNodes} checklist={checklist} setChecklist={setChecklist} prefs={prefs}
       session={session} content={content} sync={sync} mode={mode} toast={toast} showToast={showToast}
       onSaveProfile={saveProfile} onSyncNow={() => syncNow({ userInitiated: true })} onLogout={logout}
+      onRespondRequest={respondRequest} onSendMessage={sendMessage} onReadMessages={readMessages} onRefresh={() => refreshProfile()}
     />
   );
 }

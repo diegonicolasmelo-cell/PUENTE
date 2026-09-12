@@ -1,7 +1,11 @@
 import { CHECKLIST_ITEMS } from "../data/defaults.js";
 
-export default function Info({ patFirst, config, checklist, setChecklist, onBack }) {
+const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+const REQ_TAG = { pendiente: ["El equipo lo pidió", "tag-orange"], en_camino: ["En camino", "tag-blue"], no_puede: ["Pendiente", "tag-orange"], recibido: ["Recibido por el equipo", "tag-green"] };
+
+export default function Info({ patFirst, config, checklist, setChecklist, solicitudes = [], onNavigate, onBack }) {
   const done = Object.values(checklist).filter(Boolean).length;
+  const requestFor = (item) => solicitudes.find((r) => r.estado !== "cancelada" && (norm(r.texto) === norm(item) || norm(r.tipo) === norm(item)));
   return (
     <div className="screen">
       <div className="screen-header">
@@ -56,6 +60,7 @@ export default function Info({ patFirst, config, checklist, setChecklist, onBack
                 {checklist[item] && <span style={{ color: "var(--ocean)", fontSize: "0.8rem", fontWeight: 700 }}>✓</span>}
               </div>
               <span style={{ textDecoration: checklist[item] ? "line-through" : "none", color: checklist[item] ? "var(--slate)" : "var(--text)" }}>{item}</span>
+              {requestFor(item) && <span className={`patient-tag ${REQ_TAG[requestFor(item).estado][1]}`} style={{ marginLeft: "auto" }}>{REQ_TAG[requestFor(item).estado][0]}</span>}
             </li>
           ))}
         </ul>
@@ -64,7 +69,8 @@ export default function Info({ patFirst, config, checklist, setChecklist, onBack
         <div className="tip-icon">💬</div>
         <div>
           <h4>Comunicación con el equipo</h4>
-          <p>Pronto podrás enviar mensajes al equipo de enfermería desde la app. Por ahora, usa el teléfono de contacto.</p>
+          <p>Puedes escribir consultas no urgentes al equipo desde la app. Para urgencias, usa el teléfono de contacto.</p>
+          {onNavigate && <button className="tip-link" onClick={() => onNavigate("mensajes")}>Abrir mensajes →</button>}
         </div>
       </div>
     </div>

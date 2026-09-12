@@ -9,7 +9,7 @@ const VERSION = "puente-__BUILD_ID__";
 const SHELL_CACHE = VERSION + "-shell";
 const RUNTIME_CACHE = VERSION + "-runtime";
 const BASE = new URL("./", self.location).href;
-const SHELL = ["", "index.html", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png"]
+const SHELL = ["", "index.html", "equipo.html", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png"]
   .map((p) => BASE + p);
 
 self.addEventListener("install", (event) => {
@@ -54,12 +54,14 @@ self.addEventListener("fetch", (event) => {
 
 async function networkFirst(req) {
   const cache = await caches.open(SHELL_CACHE);
+  const isEquipo = new URL(req.url).pathname.endsWith("/equipo.html");
+  const shellUrl = BASE + (isEquipo ? "equipo.html" : "index.html");
   try {
     const fresh = await fetch(req);
-    if (fresh && fresh.ok) cache.put(BASE + "index.html", fresh.clone());
+    if (fresh && fresh.ok) cache.put(shellUrl, fresh.clone());
     return fresh;
   } catch (_) {
-    return (await cache.match(BASE + "index.html")) || (await cache.match(BASE)) || Response.error();
+    return (await cache.match(shellUrl)) || (!isEquipo && (await cache.match(BASE))) || Response.error();
   }
 }
 

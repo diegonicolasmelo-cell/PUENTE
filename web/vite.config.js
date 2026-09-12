@@ -7,7 +7,7 @@ import { resolve } from "node:path";
  * Inyecta un identificador de build en public/sw.js (copiado tal cual a dist/)
  * para que cada despliegue invalide las cachés del service worker anterior.
  */
-function swBuildId() {
+export function swBuildId() {
   let outDir = "dist";
   return {
     name: "puente-sw-build-id",
@@ -23,16 +23,19 @@ function swBuildId() {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  // En GitHub Pages la app vive en /<repo>/ ; en desarrollo y en el envoltorio de Apps Script, en /
+  // En GitHub Pages la app vive en /<repo>/ ; en desarrollo, en /
   const base = mode === "production" ? (env.VITE_BASE || "/PUENTE/") : "/";
   return {
     base,
     plugins: [react(), swBuildId()],
     build: {
       target: "es2019",
-      modulePreload: false,   // un solo chunk, sin <link rel=modulepreload> (facilita el inline en Apps Script)
+      modulePreload: false,
       cssCodeSplit: false,
-      rollupOptions: { output: { manualChunks: undefined } },
+      rollupOptions: {
+        // Dos entradas: la app de la familia (index.html) y el panel del equipo (equipo.html)
+        input: { main: resolve(__dirname, "index.html"), equipo: resolve(__dirname, "equipo.html") },
+      },
     },
     server: { port: 5173 },
   };

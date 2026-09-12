@@ -1721,3 +1721,50 @@
 .install-banner .install-actions button { margin-left: 0; }
 .install-banner .install-actions .primary { background: var(--teal); border-color: var(--teal); color: white; }
 @media (min-width: 900px) { .install-banner { display: none; } }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Interacción con el equipo: avisos, mensajes, badges
+   ═══════════════════════════════════════════════════════════════════════ */
+.badge-count { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 7px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; background: rgba(0,180,216,0.25); color: var(--foam); margin-left: 6px; font-family: 'DM Sans', sans-serif; }
+.badge-count.warm { background: var(--warm); color: white; }
+.section-title .badge-count { margin-left: 0; }
+.aviso-list { display: flex; flex-direction: column; gap: 10px; margin: 0 16px 16px; }
+.aviso-card { background: var(--white); border-radius: 18px; padding: 14px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; border: 1.5px solid transparent; }
+.aviso-card.pendiente { border-color: #FED7AA; }
+.aviso-card.recibido { opacity: 0.85; }
+.aviso-head { display: flex; gap: 12px; align-items: flex-start; }
+.aviso-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; background: #F1F5F9; }
+.aviso-icon.pendiente { background: #FFF7ED; } .aviso-icon.en_camino { background: #EFF6FF; } .aviso-icon.recibido { background: #ECFDF5; color: #059669; font-weight: 700; }
+.aviso-body { flex: 1; min-width: 0; }
+.aviso-body h4 { font-size: 0.95rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+.aviso-body p { font-size: 0.78rem; color: var(--slate); margin-top: 3px; }
+.aviso-nota { font-size: 0.82rem; color: #334155; margin-top: 8px; line-height: 1.5; background: #F8FAFC; border-radius: 10px; padding: 8px 12px; }
+.aviso-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.aviso-btn { flex: 1; min-width: 120px; background: var(--white); color: var(--teal); border: 1.5px solid #BFDBFE; border-radius: 12px; padding: 12px; font-size: 0.9rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+.aviso-btn.primary { background: var(--teal); color: white; border-color: var(--teal); }
+.aviso-btn.small { flex: 0 0 auto; padding: 6px 12px; font-size: 0.78rem; min-width: 0; }
+.aviso-state { font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 12px; background: #EFF6FF; color: #1E40AF; }
+.aviso-state.no_puede { background: #FFF7ED; color: #9A3412; }
+.aviso-state.recibido { background: #ECFDF5; color: #065F46; margin-left: auto; }
+.tag-urgente { display: inline-block; margin-left: 8px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; background: #FEE2E2; color: #B91C1C; padding: 2px 7px; border-radius: 8px; vertical-align: middle; }
+.msg-entry { margin: 0 16px 16px; background: linear-gradient(135deg, var(--deep), var(--teal)); border-radius: 18px; padding: 16px; color: var(--white); display: flex; gap: 14px; align-items: center; cursor: pointer; }
+.msg-entry-icon { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.msg-entry h4 { font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; }
+.msg-entry p { font-size: 0.78rem; opacity: 0.85; line-height: 1.45; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; }
+.msg-entry .menu-arrow { color: var(--foam); margin-top: 0; white-space: nowrap; }
+.tip-link { margin-top: 8px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 10px; padding: 7px 12px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+.msg-screen { display: flex; flex-direction: column; min-height: 100%; }
+.msg-thread { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 16px; }
+.msg-empty { font-size: 0.85rem; color: var(--slate); line-height: 1.6; text-align: center; padding: 24px 12px; }
+.msg-bubble { max-width: 85%; padding: 10px 14px; border-radius: 14px; font-size: 0.9rem; line-height: 1.5; }
+.msg-bubble.theirs { align-self: flex-start; background: var(--white); border-bottom-left-radius: 4px; box-shadow: var(--shadow); }
+.msg-bubble.mine { align-self: flex-end; background: var(--teal); color: white; border-bottom-right-radius: 4px; }
+.msg-meta { font-size: 0.68rem; opacity: 0.75; margin-top: 4px; }
+.msg-compose { position: sticky; bottom: 0; display: flex; gap: 8px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--light); border-top: 1px solid #E2E8F0; }
+.msg-input { flex: 1; resize: none; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; background: var(--white); color: var(--text); outline: none; }
+.msg-input:focus { border-color: var(--teal); }
+.msg-send { width: 44px; height: 44px; border-radius: 12px; border: none; background: var(--teal); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; align-self: flex-end; }
+.msg-send[disabled] { opacity: 0.5; cursor: default; }
+@media (min-width: 900px) { .aviso-list { margin: 0 32px 20px; } .msg-entry { margin: 0 32px 20px; } .msg-thread { padding: 20px 32px; } .msg-compose { padding-left: 32px; padding-right: 32px; } }
+.dark-mode .aviso-card { background: #1E293B; } .dark-mode .aviso-body h4 { color: #F1F5F9; } .dark-mode .aviso-nota { background: #0F172A; color: #CBD5E1; }
+.dark-mode .msg-bubble.theirs { background: #1E293B; color: #F1F5F9; } .dark-mode .msg-compose { background: #080f1e; border-color: #334155; } .dark-mode .msg-input { background: #1E293B; color: #F1F5F9; border-color: #334155; }

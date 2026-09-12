@@ -16,6 +16,7 @@ import Family from "./screens/Family.jsx";
 import Eol from "./screens/Eol.jsx";
 import Post from "./screens/Post.jsx";
 import Ficha from "./screens/Ficha.jsx";
+import Mensajes from "./screens/Mensajes.jsx";
 import { TEAM_ROLES } from "./data/defaults.js";
 import { stageName, ESTADO_LABEL } from "./lib/journey.js";
 import { patientNick, missingProfileFields } from "./lib/profile.js";
@@ -23,7 +24,7 @@ import { patientNick, missingProfileFields } from "./lib/profile.js";
 const TAB_LABELS = {
   home: "Inicio", journey: "El viaje UCI", faq: "Preguntas frecuentes", videos: "Videos informativos",
   profile: "Mi perfil", family: "Árbol familiar", info: "Información útil", eol: "Fin de vida",
-  post: "¿Qué viene después?", ficha: "Ficha del Paciente",
+  post: "¿Qué viene después?", ficha: "Ficha del Paciente", mensajes: "Mensajes con el equipo",
 };
 
 function toEmbedUrl(url) {
@@ -41,7 +42,7 @@ function SyncPill({ sync, mode }) {
   return <span className={`sync-pill ${cls}`} title={text}><span className="sync-dot" />{text}</span>;
 }
 
-export default function Shell({ form, treeNodes, checklist, setChecklist, prefs, session, content, sync, mode, toast, showToast, onSaveProfile, onSyncNow, onLogout }) {
+export default function Shell({ form, treeNodes, checklist, setChecklist, prefs, session, content, sync, mode, toast, showToast, onSaveProfile, onSyncNow, onLogout, onRespondRequest, onSendMessage, onReadMessages, onRefresh }) {
   const [activeTab, setActiveTab] = useState("home");
   const [modal, setModal] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -53,7 +54,7 @@ export default function Shell({ form, treeNodes, checklist, setChecklist, prefs,
   const patFirst = form.patName.split(" ")[0] || "Paciente";
   const nick = patientNick(form);
   const missing = missingProfileFields(form);
-  const config = content.config;
+  const config = session.servicio && session.servicio.nombre ? { ...content.config, nombre_unidad: session.servicio.nombre } : content.config;
   const activo = !session.estado || session.estado === "activo";
   const patientStatus = activo ? `● En UCI · ${stageName(session.etapa, content.etapas)}` : `○ ${ESTADO_LABEL[session.estado] || session.estado}`;
   const go = (tab) => setActiveTab(tab);
@@ -84,6 +85,10 @@ export default function Shell({ form, treeNodes, checklist, setChecklist, prefs,
             <NavItem id="journey" label="El viaje UCI" icon={<Icon.Journey />} />
             <NavItem id="faq" label="Preguntas frecuentes" icon={<Icon.FAQ />} />
             <NavItem id="videos" label="Videos" icon={<Icon.Video />} />
+            <button className={`dsk-nav-item ${activeTab === "mensajes" ? "active" : ""}`} onClick={() => go("mensajes")}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              Mensajes {session.noLeidos > 0 && <span className="badge-count">{session.noLeidos}</span>}
+            </button>
             <div className="dsk-nav-sep" />
             <div className="dsk-nav-section-label">Recursos</div>
             <NavItem id="info" label="Información útil" icon={<span style={{ fontSize: "1rem", width: 18, textAlign: "center" }}>ℹ️</span>} />
@@ -144,8 +149,9 @@ export default function Shell({ form, treeNodes, checklist, setChecklist, prefs,
               </div>
             )}
 
-            {activeTab === "home" && <Home form={form} etapa={session.etapa} estado={session.estado} config={config} firstName={firstName} missing={missing} onNavigate={go} onOpenSidebar={() => setSidebarOpen(true)} />}
-            {activeTab === "info" && <Info patFirst={patFirst} config={config} checklist={checklist} setChecklist={setChecklist} onBack={() => go("home")} />}
+            {activeTab === "home" && <Home form={form} etapa={session.etapa} estado={session.estado} cama={session.cama} config={config} firstName={firstName} missing={missing} solicitudes={session.solicitudes} mensajes={session.mensajes} noLeidos={session.noLeidos} mode={mode} onRespondRequest={onRespondRequest} onNavigate={go} onOpenSidebar={() => setSidebarOpen(true)} />}
+            {activeTab === "info" && <Info patFirst={patFirst} config={config} checklist={checklist} setChecklist={setChecklist} solicitudes={session.solicitudes} onNavigate={go} onBack={() => go("home")} />}
+            {activeTab === "mensajes" && <Mensajes mensajes={session.mensajes} famName={form.famName} config={config} mode={mode} onSend={onSendMessage} onRead={onReadMessages} onRefresh={onRefresh} onBack={() => go("home")} />}
             {activeTab === "journey" && <Journey etapa={session.etapa} steps={content.etapas} onOpenStep={(step) => setModal({ type: "journey-step", step })} onBack={() => go("home")} />}
             {activeTab === "videos" && <Videos videos={content.videos} onOpenVideo={(v) => setModal({ type: "video", v })} onBack={() => go("home")} />}
             {activeTab === "faq" && <Faq faq={content.faq} onBack={() => go("home")} />}

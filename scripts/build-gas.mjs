@@ -9,10 +9,10 @@ import { dirname, resolve, join } from "node:path";
 import { execFileSync } from "node:child_process";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const dist = resolve(root, "web/dist");
+const dist = resolve(root, "web/dist-gas");   // build de una sola entrada (vite.gas.config.js)
 const indexPath = join(dist, "index.html");
 if (!existsSync(indexPath)) {
-  console.error("No existe web/dist/index.html. Ejecuta primero `npm run build` en web/.");
+  console.error("No existe web/dist-gas/index.html. Ejecuta `npm run build:gas` en web/.");
   process.exit(1);
 }
 
