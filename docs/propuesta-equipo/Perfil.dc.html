@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'DM Sans', system-ui, sans-serif; color: #0A1628; -webkit-font-smoothing: antialiased; }
+    a { color: #0077B6; } a:hover { color: #023E8A; }
+    svg { display: block; }
+    .serif { font-family: 'DM Serif Display', Georgia, serif; }
+    .muted { color: #64748B; }
+    .lbl { display: block; font-size: 11.5px; font-weight: 600; color: #0077B6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .field { display: flex; align-items: center; width: 100%; padding: 10px 14px; border: 1.5px solid #E2E8F0; border-radius: 10px; font-size: 14px; color: #0A1628; background: #F8FAFC; box-sizing: border-box; }
+    .chip { padding: 6px 12px; border-radius: 16px; font-size: 12.5px; border: 1.5px solid #E2E8F0; background: #F8FAFC; color: #64748B; }
+    .chip.sel { background: #0077B6; border-color: #0077B6; color: #FFFFFF; font-weight: 600; }
+    .perm { display: flex; align-items: center; gap: 10px; font-size: 13.5px; padding: 9px 0; border-bottom: 1px solid #F1F5F9; }
+    .perm:last-child { border-bottom: none; }
+    .sw { width: 46px; height: 26px; border-radius: 13px; position: relative; flex-shrink: 0; }
+    .sw.on { background: #0077B6; } .sw.off { background: #CBD5E1; }
+    .knob { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; top: 3px; }
+  </style>
+</helmet>
+
+<div style="width: 560px; height: 820px; background: #f0f4f8; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; overflow: hidden;">
+
+  <div style="background: #FFFFFF; border-radius: 20px; box-shadow: 0 4px 24px rgba(3,4,94,0.10); overflow: hidden;">
+    <div style="background: linear-gradient(160deg, #03045E, #023E8A); padding: 24px 24px 28px; color: #FFFFFF; display: flex; align-items: center; gap: 16px;">
+      <div style="width: 64px; height: 64px; border-radius: 50%; background: #0077B6; border: 3px solid #00B4D8; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 600; flex-shrink: 0;">CR</div>
+      <div style="min-width: 0;">
+        <div class="serif" style="font-size: 24px; line-height: 1.15;">Claudia Rojas Pinto</div>
+        <div style="font-size: 13px; color: #90E0EF; margin-top: 4px;">Enfermera · UCI Adultos · Piso 4</div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11.5px; background: rgba(0,180,216,0.18); border: 1px solid rgba(0,180,216,0.35); border-radius: 999px; padding: 4px 10px; color: #CAF0F8;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+          <span>Cuenta Google del hospital</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 18px;">
+      <div>
+        <span class="lbl">Correo institucional</span>
+        <div class="field" style="justify-content: space-between;"><span>c.rojas@hospitalregional.cl</span><span class="muted" style="font-size: 11.5px;">lo define tu cuenta</span></div>
+      </div>
+      <div>
+        <span class="lbl">Rol</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span class="chip sel">Enfermero/a</span><span class="chip">TENS</span><span class="chip">Médico/a</span><span class="chip">Kinesiólogo/a</span><span class="chip">Psicólogo/a</span><span class="chip">Trabajador/a social</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+        <div>
+          <span class="lbl">Servicio</span>
+          <div class="field" style="justify-content: space-between;"><span>UCI Adultos</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+          <div class="muted" style="font-size: 11.5px; margin-top: 5px;">Lo asigna el administrador del servicio</div>
+        </div>
+        <div>
+          <span class="lbl">Turno habitual</span>
+          <div style="display: flex; border: 1.5px solid #E2E8F0; border-radius: 10px; overflow: hidden;">
+            <span style="flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 600; background: #0077B6; color: #FFFFFF;">Día</span>
+            <span style="flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 600; color: #64748B; background: #F8FAFC;">Noche</span>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; background: #F8FAFC; border-radius: 12px; border: 1.5px solid #E2E8F0;">
+        <div><div style="font-size: 13.5px; font-weight: 500;">Resumen por correo al inicio del turno</div><div class="muted" style="font-size: 11.5px; margin-top: 2px;">Solicitudes pendientes y mensajes sin responder del servicio</div></div>
+        <div class="sw on"><div class="knob" style="left: 23px;"></div></div>
+      </div>
+      <div>
+        <span class="lbl">Lo que puedes hacer</span>
+        <div>
+          <div class="perm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg><span>Ver los pacientes de UCI Adultos y sus fichas humanizadas</span></div>
+          <div class="perm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg><span>Pedir insumos y responder mensajes de las familias</span></div>
+          <div class="perm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg><span>Cambiar la etapa y el estado que ve la familia</span></div>
+          <div class="perm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg><span>Registrar pacientes y entregar códigos de acceso</span></div>
+          <div class="perm muted"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"></path></svg><span>Administrar profesionales y contenido (solo administrador)</span></div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <div style="flex: 1; background: #0077B6; color: #FFFFFF; border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 600; text-align: center;">Guardar</div>
+        <div style="background: #FFFFFF; color: #EF4444; border: 1.5px solid #FECACA; border-radius: 12px; padding: 13px 18px; font-size: 14px; font-weight: 600; text-align: center;">Cerrar sesión</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

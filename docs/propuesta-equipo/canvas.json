@@ -1,0 +1,16 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",     "title": "Tablero del servicio (equipo, escritorio)", "x": 0,    "y": 0,    "w": 1440, "h": 900 },
+    { "file": "Paciente.dc.html", "title": "Detalle del paciente (equipo, escritorio)", "x": 1560, "y": 0,    "w": 1440, "h": 960 },
+    { "file": "Familia.dc.html",  "title": "Inicio de la familia con avisos (teléfono)",  "x": 0,    "y": 1120, "w": 390,  "h": 844 },
+    { "file": "Perfil.dc.html",   "title": "Perfil del profesional",                    "x": 520,  "y": 1120, "w": 560,  "h": 820 }
+  ],
+  "annotations": [
+    { "id": "nota-alcance",  "x": 0,    "y": -170, "w": 460, "text": "ALCANCE POR SERVICIO\nCada profesional figura en la hoja Profesionales con su correo, rol y servicio. El servidor filtra los pacientes por ese servicio; el navegador nunca decide qué ve. Un profesional de UCI Adultos no ve UCI Pediátrica ni el total de usuarios." },
+    { "id": "nota-tablero", "x": 500,  "y": -170, "w": 460, "text": "TABLERO\nUna tarjeta por cama: etapa, familiar de contacto, solicitudes pendientes, útiles marcados y última actividad. Filtros de trabajo (con solicitudes, perfil incompleto, sin familiar). La cama sin familiar muestra el código para entregarlo." },
+    { "id": "nota-solicitud", "x": 1560, "y": -170, "w": 520, "text": "SOLICITUDES E INTERACCIÓN\nEl equipo elige un insumo (pañales, pantuflas...) y una nota; la familia lo ve al abrir la app y responde con un toque. Estados: pendiente → en camino → recibido. El botón WhatsApp abre wa.me con el texto listo, sin infraestructura de notificaciones. La lista de útiles y las solicitudes se cruzan." },
+    { "id": "nota-familia", "x": 0,    "y": 990,  "w": 460, "text": "LO QUE VE LA FAMILIA\nNueva sección Avisos del equipo en Inicio, con respuesta directa (Ya lo llevo / No puedo hoy) y estado de cada pedido. Mensajes con el equipo reemplaza el 'próximamente' actual. No es un canal de urgencias: se dice en pantalla." },
+    { "id": "nota-acceso",  "x": 520,  "y": 990,  "w": 560, "text": "PERFIL Y ACCESO DEL PROFESIONAL\nSin contraseñas propias: entra con la cuenta Google del hospital (implementación de Apps Script restringida al dominio). Nombre, rol y turno los edita cada profesional; el servicio lo asigna el administrador. Hojas nuevas: Servicios, Profesionales, Solicitudes, Mensajes. Pacientes suma servicio y cama." }
+  ],
+  "launch": { "view": "canvas" }
+}

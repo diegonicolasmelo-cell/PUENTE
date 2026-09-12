@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'DM Sans', system-ui, sans-serif; color: #0A1628; -webkit-font-smoothing: antialiased; }
+    a { color: #0077B6; } a:hover { color: #023E8A; }
+    svg { display: block; }
+    .serif { font-family: 'DM Serif Display', Georgia, serif; }
+    .nav { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; border: 1px solid transparent; color: rgba(255,255,255,0.55); font-size: 14px; font-weight: 500; }
+    .nav.active { background: rgba(0,180,216,0.15); color: #00B4D8; border-color: rgba(0,180,216,0.3); }
+    .navlbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.25); padding: 4px 14px 2px; }
+    .sep { height: 1px; background: rgba(255,255,255,0.06); margin: 8px 0; }
+    .pill { padding: 8px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 500; white-space: nowrap; }
+    .pill.on { background: #0077B6; color: #FFFFFF; }
+    .pill.off { background: #FFFFFF; color: #64748B; box-shadow: 0 4px 24px rgba(3,4,94,0.10); }
+    .card { background: #FFFFFF; border-radius: 20px; box-shadow: 0 4px 24px rgba(3,4,94,0.10); }
+    .tag { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+    .tag.blue { background: #EFF6FF; color: #1E40AF; } .tag.green { background: #ECFDF5; color: #065F46; }
+    .tag.orange { background: #FFF7ED; color: #9A3412; } .tag.grey { background: #F1F5F9; color: #64748B; } .tag.purple { background: #F5F3FF; color: #5B21B6; }
+    .dot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+    .dot.done { background: #00B4D8; color: #03045E; } .dot.cur { background: #0077B6; color: #FFFFFF; box-shadow: 0 0 0 3px rgba(0,119,182,0.25); } .dot.fut { background: #F1F5F9; color: #64748B; }
+    .con { width: 12px; height: 2px; background: #E2E8F0; } .con.done { background: #00B4D8; }
+    .bed { background: #CAF0F8; color: #023E8A; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 8px; letter-spacing: 0.04em; }
+    .muted { color: #64748B; }
+    .ev { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F1F5F9; align-items: flex-start; }
+    .ev:last-child { border-bottom: none; }
+  </style>
+</helmet>
+
+<div style="width: 1440px; height: 900px; display: flex; background: #f0f4f8; overflow: hidden;">
+
+  <!-- ── Barra lateral del equipo (misma anatomía que la app de la familia) ── -->
+  <nav style="width: 240px; min-width: 240px; background: #03045E; border-right: 1px solid rgba(0,180,216,0.12); display: flex; flex-direction: column;">
+    <div style="padding: 28px 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.07);">
+      <div class="serif" style="font-size: 24px; color: #FFFFFF; letter-spacing: 0.02em; display: flex; align-items: center; gap: 8px;">Puente <span style="color: #00B4D8;">UCI</span></div>
+      <div style="font-size: 11.5px; color: rgba(144,224,239,0.6); letter-spacing: 0.05em; margin-top: 6px;">Panel del equipo</div>
+    </div>
+    <div style="margin: 16px 16px 0; background: rgba(0,180,216,0.1); border: 1px solid rgba(0,180,216,0.2); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px;">
+      <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #00B4D8, #0077B6); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l7-4 7 4v14"></path><path d="M9 21v-5h6v5"></path><path d="M12 9v4M10 11h4"></path></svg>
+      </div>
+      <div>
+        <div style="font-size: 13px; font-weight: 600; color: #FFFFFF; line-height: 1.3;">UCI Adultos</div>
+        <div style="font-size: 11px; color: #00B4D8; margin-top: 2px;">Piso 4 · 8 pacientes activos</div>
+      </div>
+    </div>
+    <div style="flex: 1; padding: 20px 12px; display: flex; flex-direction: column; gap: 4px;">
+      <div class="navlbl">Servicio</div>
+      <div class="nav active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg><span>Tablero</span></div>
+      <div class="nav"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.5 5h13l3.5 7v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"></path></svg><span>Solicitudes</span><span style="margin-left: auto; background: #E9724C; color: #FFFFFF; font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 10px;">3</span></div>
+      <div class="nav"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><span>Mensajes</span><span style="margin-left: auto; background: rgba(0,180,216,0.25); color: #90E0EF; font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 10px;">2</span></div>
+      <div class="sep"></div>
+      <div class="navlbl">Administración</div>
+      <div class="nav"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>Contenido de la app</span></div>
+      <div class="nav"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span>Profesionales</span></div>
+    </div>
+    <div style="padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.07);">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: #0077B6; border: 2px solid #00B4D8; display: flex; align-items: center; justify-content: center; font-size: 13.5px; color: #FFFFFF; font-weight: 600; flex-shrink: 0;">CR</div>
+        <div>
+          <div style="font-size: 13px; font-weight: 600; color: #FFFFFF;">Claudia Rojas</div>
+          <div style="font-size: 11px; color: #64748B; margin-top: 1px;">Enfermera · turno día</div>
+        </div>
+        <div style="margin-left: auto; font-size: 11px; color: #00B4D8; padding: 4px 8px;">Perfil</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Contenido ── -->
+  <div style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 64px; background: #FFFFFF; border-bottom: 1px solid #E2E8F0; flex-shrink: 0;">
+      <div class="serif" style="font-size: 19px; color: #0A1628;">Tablero · UCI Adultos</div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 20px; padding: 5px 14px; font-size: 12.5px; color: #0077B6; font-weight: 500;">Viernes 12 de septiembre · 15:40</div>
+        <div style="display: flex; align-items: center; gap: 8px; background: #0077B6; color: #FFFFFF; border-radius: 12px; padding: 9px 16px; font-size: 13.5px; font-weight: 600;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+          <span>Registrar paciente</span>
+        </div>
+        <div style="width: 36px; height: 36px; border-radius: 50%; background: #0077B6; border: 2px solid #00B4D8; display: flex; align-items: center; justify-content: center; font-size: 13.5px; color: #FFFFFF; font-weight: 600;">CR</div>
+      </div>
+    </div>
+
+    <div style="flex: 1; padding: 24px 32px 32px; display: flex; flex-direction: column; gap: 18px; min-height: 0;">
+      <!-- filtros -->
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="pill on">Todos · 8</div>
+        <div class="pill off">Con solicitudes pendientes · 3</div>
+        <div class="pill off">Perfil incompleto · 2</div>
+        <div class="pill off">Sin familiar conectado · 1</div>
+        <div style="margin-left: auto; display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 9px 14px; width: 260px; color: #64748B; font-size: 13px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          <span>Buscar por nombre o cama</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 24px; flex: 1; min-height: 0;">
+        <!-- tarjetas de pacientes -->
+        <div style="flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-content: start;">
+
+          <div class="card" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px; border: 1.5px solid #FED7AA;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: #CAF0F8; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #023E8A; font-size: 14px; flex-shrink: 0;">CP</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 15px; font-weight: 600; color: #0A1628;">Carlos Pérez Soto</div>
+                <div class="muted" style="font-size: 12px; margin-top: 2px;">"Don Carlos" · Carpintero</div>
+              </div>
+              <span class="bed" style="margin-left: auto;">CAMA 4</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div class="dot done">✓</div><div class="con done"></div><div class="dot done">✓</div><div class="con done"></div><div class="dot cur">3</div><div class="con"></div><div class="dot fut">4</div>
+              <span style="font-size: 12px; font-weight: 600; color: #0077B6; margin-left: 6px;">Destete</span>
+            </div>
+            <div class="muted" style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>María González, hija · +56 9 1234 5678</span>
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+              <span class="tag orange">2 solicitudes pendientes</span><span class="tag green">Útiles 5/7</span><span class="tag grey">Familia activa hace 2 h</span>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: #F5F3FF; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #5B21B6; font-size: 14px; flex-shrink: 0;">RM</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 15px; font-weight: 600; color: #0A1628;">Rosa Martínez Vidal</div>
+                <div class="muted" style="font-size: 12px; margin-top: 2px;">"Rosita" · Profesora jubilada</div>
+              </div>
+              <span class="bed" style="margin-left: auto;">CAMA 2</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div class="dot done">✓</div><div class="con done"></div><div class="dot cur">2</div><div class="con"></div><div class="dot fut">3</div><div class="con"></div><div class="dot fut">4</div>
+              <span style="font-size: 12px; font-weight: 600; color: #0077B6; margin-left: 6px;">Estabilización</span>
+            </div>
+            <div class="muted" style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>Pedro Martínez, hijo · +56 9 8765 4321</span>
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+              <span class="tag green">Útiles 7/7</span><span class="tag blue">1 mensaje sin responder</span><span class="tag grey">Activa hace 45 min</span>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: #ECFDF5; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #065F46; font-size: 14px; flex-shrink: 0;">JM</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 15px; font-weight: 600; color: #0A1628;">Juan Muñoz Leiva</div>
+                <div class="muted" style="font-size: 12px; margin-top: 2px;">Chofer</div>
+              </div>
+              <span class="bed" style="margin-left: auto;">CAMA 6</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div class="dot cur">1</div><div class="con"></div><div class="dot fut">2</div><div class="con"></div><div class="dot fut">3</div><div class="con"></div><div class="dot fut">4</div>
+              <span style="font-size: 12px; font-weight: 600; color: #0077B6; margin-left: 6px;">Etapa aguda</span>
+            </div>
+            <div class="muted" style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>Paula Rojas, pareja · +56 9 5555 0101</span>
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+              <span class="tag orange">Perfil incompleto</span><span class="tag grey">Útiles 0/7</span><span class="tag grey">Registrado hoy 09:10</span>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: #FFF7ED; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #9A3412; font-size: 14px; flex-shrink: 0;">AF</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 15px; font-weight: 600; color: #0A1628;">Ana Fuentes Bravo</div>
+                <div class="muted" style="font-size: 12px; margin-top: 2px;">"Anita" · Comerciante</div>
+              </div>
+              <span class="bed" style="margin-left: auto;">CAMA 1</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div class="dot done">✓</div><div class="con done"></div><div class="dot done">✓</div><div class="con done"></div><div class="dot done">✓</div><div class="con done"></div><div class="dot cur">4</div>
+              <span style="font-size: 12px; font-weight: 600; color: #0077B6; margin-left: 6px;">Pre-alta</span>
+            </div>
+            <div class="muted" style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>Luis Fuentes, hermano · +56 9 2222 3344</span>
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+              <span class="tag orange">1 solicitud pendiente</span><span class="tag green">Útiles 6/7</span><span class="tag purple">Ficha impresa</span>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; box-shadow: none;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: #E2E8F0; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #64748B; font-size: 14px; flex-shrink: 0;">HS</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 15px; font-weight: 600; color: #0A1628;">Héctor Silva Paredes</div>
+                <div class="muted" style="font-size: 12px; margin-top: 2px;">Sin perfil todavía</div>
+              </div>
+              <span class="bed" style="margin-left: auto;">CAMA 5</span>
+            </div>
+            <div class="muted" style="font-size: 12.5px; line-height: 1.5;">Ningún familiar ha entrado con el código. Entrégalo en la próxima visita o envíalo por WhatsApp.</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-family: 'DM Serif Display', Georgia, serif; font-size: 17px; letter-spacing: 0.12em; color: #023E8A;">K7PM-2RXA</span>
+              <span style="margin-left: auto; font-size: 12.5px; font-weight: 600; color: #0077B6; border: 1.5px solid #0077B6; border-radius: 10px; padding: 6px 12px;">Copiar código</span>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: #EFF6FF; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #1E40AF; font-size: 14px; flex-shrink: 0;">MT</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 15px; font-weight: 600; color: #0A1628;">Marta Torres Ávila</div>
+                <div class="muted" style="font-size: 12px; margin-top: 2px;">"Martita" · Dueña de casa</div>
+              </div>
+              <span class="bed" style="margin-left: auto;">CAMA 8</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div class="dot done">✓</div><div class="con done"></div><div class="dot cur">2</div><div class="con"></div><div class="dot fut">3</div><div class="con"></div><div class="dot fut">4</div>
+              <span style="font-size: 12px; font-weight: 600; color: #0077B6; margin-left: 6px;">Estabilización</span>
+            </div>
+            <div class="muted" style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>Camila Torres, nieta · sin WhatsApp</span>
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+              <span class="tag orange">Perfil incompleto</span><span class="tag green">Útiles 3/7</span><span class="tag grey">Activa ayer</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- columna derecha: actividad y pendientes -->
+        <div style="width: 340px; min-width: 340px; display: flex; flex-direction: column; gap: 16px;">
+          <div class="card" style="padding: 18px 20px 8px;">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #64748B; margin-bottom: 6px;">Solicitudes pendientes</div>
+            <div class="ev">
+              <div style="width: 30px; height: 30px; border-radius: 9px; background: #FFF7ED; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C2410C" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></div>
+              <div style="font-size: 12.5px; line-height: 1.45;"><span style="font-weight: 600;">Pañales talla L</span> · Carlos, cama 4<div class="muted" style="font-size: 11.5px;">Pendiente · pedido hoy 13:10 por Claudia</div></div>
+            </div>
+            <div class="ev">
+              <div style="width: 30px; height: 30px; border-radius: 9px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0077B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></div>
+              <div style="font-size: 12.5px; line-height: 1.45;"><span style="font-weight: 600;">Pantuflas</span> · Carlos, cama 4<div class="muted" style="font-size: 11.5px;">En camino · la familia respondió 14:02</div></div>
+            </div>
+            <div class="ev">
+              <div style="width: 30px; height: 30px; border-radius: 9px; background: #FFF7ED; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C2410C" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></div>
+              <div style="font-size: 12.5px; line-height: 1.45;"><span style="font-weight: 600;">Ropa para el alta</span> · Ana, cama 1<div class="muted" style="font-size: 11.5px;">Pendiente · pedido ayer 18:40 por Tomás (TENS)</div></div>
+            </div>
+          </div>
+          <div class="card" style="padding: 18px 20px 8px; flex: 1;">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #64748B; margin-bottom: 6px;">Actividad de las familias</div>
+            <div class="ev"><div class="muted" style="font-size: 11px; width: 38px; flex-shrink: 0; padding-top: 2px;">14:55</div><div style="font-size: 12.5px; line-height: 1.45;">La familia de <span style="font-weight: 600;">Rosa</span> marcó Pantuflas y Crema corporal como traídos.</div></div>
+            <div class="ev"><div class="muted" style="font-size: 11px; width: 38px; flex-shrink: 0; padding-top: 2px;">14:20</div><div style="font-size: 12.5px; line-height: 1.45;">Consulta de la familia de <span style="font-weight: 600;">Juan</span>: "¿Puedo traerle una radio pequeña?"</div></div>
+            <div class="ev"><div class="muted" style="font-size: 11px; width: 38px; flex-shrink: 0; padding-top: 2px;">11:30</div><div style="font-size: 12.5px; line-height: 1.45;"><span style="font-weight: 600;">Ana</span> pasó a Pre-alta. La familia ya lo vio.</div></div>
+            <div class="ev"><div class="muted" style="font-size: 11px; width: 38px; flex-shrink: 0; padding-top: 2px;">09:10</div><div style="font-size: 12.5px; line-height: 1.45;">Paula completó el perfil de <span style="font-weight: 600;">Juan</span> con el código de la cama 6.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

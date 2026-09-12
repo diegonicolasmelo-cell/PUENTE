@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'DM Sans', system-ui, sans-serif; color: #0A1628; -webkit-font-smoothing: antialiased; }
+    a { color: #0077B6; } a:hover { color: #023E8A; }
+    svg { display: block; }
+    .serif { font-family: 'DM Serif Display', Georgia, serif; }
+    .muted { color: #64748B; }
+    .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: rgba(255,255,255,0.5); padding: 10px 0; }
+    .tab.active { color: #00B4D8; }
+    .dot { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+    .dot.done { background: #00B4D8; color: #03045E; } .dot.cur { background: #0077B6; color: #FFFFFF; box-shadow: 0 0 0 3px rgba(0,119,182,0.25); } .dot.fut { background: #F1F5F9; color: #64748B; }
+    .tag { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .tag.orange { background: #FFF7ED; color: #9A3412; } .tag.blue { background: #EFF6FF; color: #1E40AF; } .tag.green { background: #ECFDF5; color: #065F46; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 844px; display: flex; flex-direction: column; background: #F0F9FF; overflow: hidden; position: relative;">
+
+  <div style="height: 60px; flex-shrink: 0; background: #03045E; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 2px 20px rgba(0,0,0,0.3);">
+    <div class="serif" style="font-size: 20px; color: #FFFFFF;">Puente <span style="color: #00B4D8;">UCI</span></div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: rgba(0,180,216,0.14); color: #00B4D8; border: 1px solid rgba(0,180,216,0.25);"><span style="width: 7px; height: 7px; border-radius: 50%; background: currentColor;"></span>Sincronizado</span>
+      <div style="width: 36px; height: 36px; border-radius: 50%; background: #0077B6; border: 2px solid #00B4D8; display: flex; align-items: center; justify-content: center; font-size: 13.5px; color: #FFFFFF; font-weight: 600;">M</div>
+    </div>
+  </div>
+
+  <div style="flex: 1; overflow-y: auto; min-height: 0; padding-bottom: 24px;">
+    <div style="background: linear-gradient(160deg, #03045E 0%, #023E8A 60%, #023060 100%); padding: 22px 20px 44px; color: #FFFFFF;">
+      <div style="font-size: 14px; color: #90E0EF; margin-bottom: 4px;">Buenas tardes, María</div>
+      <div class="serif" style="font-size: 30px; line-height: 1.1;">¿Cómo estás hoy?</div>
+    </div>
+
+    <div style="margin: -28px 16px 0; background: #FFFFFF; border-radius: 20px; padding: 18px 20px; box-shadow: 0 12px 48px rgba(3,4,94,0.18);">
+      <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #64748B; margin-bottom: 10px;">Estado de tu familiar</div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 12px; height: 12px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 0 4px rgba(34,197,94,0.2); flex-shrink: 0;"></div>
+        <div><div style="font-size: 16px; font-weight: 600;">Carlos Pérez Soto</div><div class="muted" style="font-size: 12.5px; margin-top: 2px;">"Don Carlos" · Cama 4 · UCI Adultos</div></div>
+        <span style="margin-left: auto; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #EFF6FF; color: #0077B6;">En UCI</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #F1F5F9;">
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;"><div class="dot done">✓</div><div class="muted" style="font-size: 9.5px;">Etapa Aguda</div></div>
+        <div style="width: 16px; height: 2px; background: #00B4D8;"></div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;"><div class="dot done">✓</div><div class="muted" style="font-size: 9.5px;">Estabiliz.</div></div>
+        <div style="width: 16px; height: 2px; background: #00B4D8;"></div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;"><div class="dot cur">3</div><div class="muted" style="font-size: 9.5px;">Destete</div></div>
+        <div style="width: 16px; height: 2px; background: #E2E8F0;"></div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;"><div class="dot fut">4</div><div class="muted" style="font-size: 9.5px;">Pre-Alta UCI</div></div>
+      </div>
+    </div>
+
+    <!-- NUEVO: avisos del equipo -->
+    <div class="serif" style="font-size: 18px; padding: 22px 20px 10px; display: flex; align-items: center; justify-content: space-between;">
+      <span>Avisos del equipo</span>
+      <span style="font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; font-weight: 700; background: #E9724C; color: #FFFFFF; padding: 3px 9px; border-radius: 10px;">1 nuevo</span>
+    </div>
+
+    <div style="margin: 0 16px; display: flex; flex-direction: column; gap: 10px;">
+      <div style="background: #FFFFFF; border-radius: 18px; padding: 16px; box-shadow: 0 4px 24px rgba(3,4,94,0.10); border: 1.5px solid #FED7AA; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 12px; background: #FFF7ED; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C2410C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.7 21a2 2 0 0 1-3.4 0"></path></svg></div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 15px; font-weight: 600; line-height: 1.3;">El equipo pide: pañales talla L</div>
+            <div class="muted" style="font-size: 12.5px; margin-top: 3px;">Claudia Rojas, Enfermera · hoy 13:10</div>
+            <div style="font-size: 13px; color: #334155; margin-top: 8px; line-height: 1.5; background: #F8FAFC; border-radius: 10px; padding: 8px 12px;">Paquete de 10. Para los próximos tres días.</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <div style="flex: 1; background: #0077B6; color: #FFFFFF; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 600; text-align: center;">Ya lo llevo</div>
+          <div style="flex: 1; background: #FFFFFF; color: #0077B6; border: 1.5px solid #BFDBFE; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 600; text-align: center;">No puedo hoy</div>
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; border-radius: 18px; padding: 14px 16px; box-shadow: 0 4px 24px rgba(3,4,94,0.10); display: flex; gap: 12px; align-items: center;">
+        <div style="width: 40px; height: 40px; border-radius: 12px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0077B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14.5px; font-weight: 600;">Pantuflas</div>
+          <div class="muted" style="font-size: 12px; margin-top: 2px;">Respondiste "Ya lo llevo" a las 14:02</div>
+        </div>
+        <span class="tag blue">En camino</span>
+      </div>
+
+      <div style="background: #FFFFFF; border-radius: 18px; padding: 14px 16px; box-shadow: 0 4px 24px rgba(3,4,94,0.10); display: flex; gap: 12px; align-items: center; opacity: 0.85;">
+        <div style="width: 40px; height: 40px; border-radius: 12px; background: #ECFDF5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14.5px; font-weight: 600;">Pijama de 2 piezas</div>
+          <div class="muted" style="font-size: 12px; margin-top: 2px;">Recibido por el equipo · 11 de septiembre</div>
+        </div>
+        <span class="tag green">Recibido</span>
+      </div>
+    </div>
+
+    <!-- NUEVO: mensajes -->
+    <div class="serif" style="font-size: 18px; padding: 22px 20px 10px;">Mensajes con el equipo</div>
+    <div style="margin: 0 16px; background: linear-gradient(135deg, #023E8A, #0077B6); border-radius: 18px; padding: 16px; color: #FFFFFF; display: flex; gap: 14px; align-items: flex-start;">
+      <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+      <div style="flex: 1; min-width: 0;">
+        <div style="font-size: 14px; font-weight: 600;">Claudia respondió a tu consulta</div>
+        <div style="font-size: 12.5px; opacity: 0.85; line-height: 1.5; margin-top: 4px;">"Sí, sin problema. Con volumen bajo y sin audífonos por ahora."</div>
+        <div style="font-size: 12px; font-weight: 600; margin-top: 8px; color: #90E0EF;">Abrir conversación</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 68px; flex-shrink: 0; background: #03045E; display: flex; align-items: center; box-shadow: 0 -2px 20px rgba(0,0,0,0.3);">
+    <div class="tab active"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M9 22V12h6v10"></path></svg>Inicio</div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>Mi camino</div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>Preguntas</div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg>Videos</div>
+    <div class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Perfil</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
