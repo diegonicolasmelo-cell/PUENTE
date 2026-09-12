@@ -10,6 +10,6 @@ Candidatos para el icono de la PWA. El icono vigente está en `web/public/icons/
 
 `comparativa.png` muestra cada uno a 160 px, con recorte circular (Android), a 64 y 48 px y sobre fondo oscuro.
 
-Para adoptar una variante: copiar el SVG elegido a `web/public/icons/icon.svg`, cambiar el `id` del
-degradado a `bg` no es necesario, y regenerar `icon-192.png`, `icon-512.png` e
-`icon-maskable-512.png` (512 px, arte al 80% sobre fondo sólido `#03045E` para la versión maskable).
+Para adoptar una variante: copiar el SVG elegido a `web/public/icons/icon.svg` y ejecutar
+`node scripts/build-icons.mjs` (requiere Playwright: `cd web && npm i -D playwright && npx playwright install chromium`).
+Genera `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` (Android) y `apple-touch-icon.png` (iPhone, 180 px opaco).

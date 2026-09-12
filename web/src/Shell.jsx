@@ -5,6 +5,7 @@ import Icon from "./components/Icons.jsx";
 import Toast from "./components/Toast.jsx";
 import Modal from "./components/Modal.jsx";
 import ProfileSidebar from "./components/ProfileSidebar.jsx";
+import InstallBanner from "./components/InstallBanner.jsx";
 import Home from "./screens/Home.jsx";
 import Info from "./screens/Info.jsx";
 import Journey from "./screens/Journey.jsx";
@@ -135,6 +136,7 @@ export default function Shell({ form, treeNodes, checklist, setChecklist, prefs,
                 <button onClick={() => setBannerDismissed(true)}>Entendido</button>
               </div>
             )}
+            <InstallBanner />
             {sync.online && mode !== "local" && sync.pending && !sync.busy && (
               <div className="app-banner" role="status">
                 🔄 Hay cambios sin subir{sync.lastError ? ` (${sync.lastError})` : ""}.

@@ -179,6 +179,14 @@ else                               → modo local (sin red)
   - **API**: nunca se cachea; el modo sin conexión de los datos lo resuelve localStorage.
   - Versión inyectada en el build para invalidar cachés antiguas.
 - Registro del service worker solo fuera del iframe de Apps Script.
+- **iPhone / iPad**: Safari soporta service worker, manifest (`display: standalone`) y caché, pero no
+  ofrece botón de instalación: la app muestra la instrucción Compartir → "Añadir a pantalla de inicio".
+  Se incluye `apple-touch-icon.png` opaco de 180 px (iOS pinta de negro las esquinas transparentes),
+  zonas seguras (`env(safe-area-inset-*)`) para la muesca y la barra inferior, altura `100dvh` y
+  campos de 16 px para evitar el zoom automático al escribir. Safari borra el almacenamiento de un
+  sitio tras 7 días sin visitarlo, salvo si está instalado en la pantalla de inicio; el código de
+  acceso cubre ese caso. Las notificaciones push existen en iOS 16.4+ solo para apps instaladas y
+  requieren un servicio intermedio (ver §8).
 
 ### 5.4 Cambios funcionales respecto al prototipo
 

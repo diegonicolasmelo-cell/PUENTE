@@ -5,6 +5,7 @@ export const KEYS = {
   content: "puente.content",
   pending: "puente.pending",
   apiUrl:  "puente.apiUrl",
+  installHint: "puente.installHint",
 };
 
 export function loadJSON(key, fallback = null) {

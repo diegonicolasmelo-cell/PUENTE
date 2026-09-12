@@ -34,7 +34,11 @@ la versión anterior.
    `https://<usuario>.github.io/PUENTE/`.
 4. Si el repositorio se llama distinto de `PUENTE`, define también la variable `VITE_BASE` con
    `/<nombre-del-repo>/`.
-5. Abre la URL en el teléfono → menú del navegador → **Agregar a pantalla de inicio**.
+5. Abre la URL en el teléfono y agrégala a la pantalla de inicio:
+   - **Android (Chrome)**: la app muestra un botón "Instalar"; también sirve el menú ⋮ → *Instalar app*.
+   - **iPhone / iPad (Safari)**: no existe botón de instalación. Toca **Compartir** (cuadrado con flecha) →
+     **Añadir a pantalla de inicio**. La app lo recuerda con un aviso la primera vez. Desde la pantalla de
+     inicio abre a pantalla completa, guarda los datos sin conexión y respeta la muesca y la barra inferior.
 
 ## C. Envoltorio en Apps Script (opcional)
 
@@ -67,3 +71,5 @@ modo sin conexión, pero funcional). Este modo usa `google.script.run`, no neces
 | Cambios en el script no se ven | La implementación apunta a una versión antigua | Nueva versión de la implementación |
 | Guardar falla con "código no encontrado" | Se borró la fila o se editó la columna `codigo` | Restaura desde el historial de versiones de la planilla |
 | Fotos no aparecen en la ficha | Celda `foto` vacía o truncada | Volver a subir la foto desde la app (se reduce automáticamente) |
+| En iPhone el icono sale con esquinas negras | Falta `apple-touch-icon.png` opaco | `node scripts/build-icons.mjs` regenera los cuatro PNG |
+| En iPhone se perdió el perfil tras días sin usar Safari | Safari borra el almacenamiento de sitios no visitados en 7 días (no aplica a la app instalada en inicio) | Entrar con el código de acceso; recomendar instalar en pantalla de inicio |
