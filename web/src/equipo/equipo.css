@@ -126,3 +126,7 @@
   .eq-qr-sheet * { visibility: visible; }
   @page { size: A4 portrait; margin: 0; }
 }
+
+.eq-login { flex-direction: column; gap: 18px; }
+.eq-back-link { font-size: 0.8rem; color: rgba(144,224,239,0.7); text-decoration: none; }
+.eq-back-link:hover { color: var(--mint); text-decoration: underline; text-underline-offset: 3px; }

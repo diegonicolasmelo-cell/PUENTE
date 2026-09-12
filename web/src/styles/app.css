@@ -1768,3 +1768,7 @@
 @media (min-width: 900px) { .aviso-list { margin: 0 32px 20px; } .msg-entry { margin: 0 32px 20px; } .msg-thread { padding: 20px 32px; } .msg-compose { padding-left: 32px; padding-right: 32px; } }
 .dark-mode .aviso-card { background: #1E293B; } .dark-mode .aviso-body h4 { color: #F1F5F9; } .dark-mode .aviso-nota { background: #0F172A; color: #CBD5E1; }
 .dark-mode .msg-bubble.theirs { background: #1E293B; color: #F1F5F9; } .dark-mode .msg-compose { background: #080f1e; border-color: #334155; } .dark-mode .msg-input { background: #1E293B; color: #F1F5F9; border-color: #334155; }
+
+/* Acceso discreto del equipo desde la pantalla de bienvenida (misma dirección para todos) */
+.staff-link { display: block; text-align: center; margin-top: 22px; font-size: 0.74rem; color: rgba(255,255,255,0.38); text-decoration: none; font-family: 'DM Sans', sans-serif; }
+.staff-link:hover, .staff-link:focus-visible { color: var(--mint); text-decoration: underline; text-underline-offset: 3px; }

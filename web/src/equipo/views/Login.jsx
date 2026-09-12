@@ -57,6 +57,7 @@ export default function Login({ mode, onLogin, showToast, toast }) {
           </>
         )}
       </form>
+      <a className="eq-back-link" href={import.meta.env.BASE_URL}>← Soy familiar: ir a la app</a>
       {toast && <div className="eq-toast" role="status">{toast}</div>}
     </div>
   );

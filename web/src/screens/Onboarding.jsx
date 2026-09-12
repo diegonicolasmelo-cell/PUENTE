@@ -72,6 +72,7 @@ export default function Onboarding({ form, setForm, treeNodes, setTreeNodes, toa
           </div>
           <button className="ob-btn" onClick={() => { if (!form.famName.trim()) { showToast("⚠️ Ingresa tu nombre para continuar"); return; } setObStep(1); }}>Continuar →</button>
           {mode !== "local" && <button className="code-entry-link" onClick={() => setRestoring(true)}>Ya tengo un código de acceso</button>}
+          {mode !== "gas" && <a className="staff-link" href={import.meta.env.BASE_URL + "equipo.html"}>¿Eres del equipo de salud? Entrar al panel</a>}
         </div>
       )}
 
