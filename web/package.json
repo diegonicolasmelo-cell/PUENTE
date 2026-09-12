@@ -1,0 +1,21 @@
+{
+  "name": "puente-uci-web",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Puente UCI — PWA para familiares de pacientes en UCI",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:gas": "vite build && node ../scripts/build-gas.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.0"
+  }
+}
