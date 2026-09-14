@@ -121,7 +121,7 @@ export default function Onboarding({ form, setForm, treeNodes, setTreeNodes, toa
         <div className="ob-step active">
           <Header tagline="Su vida más allá de la UCI" style={{ marginBottom: 16 }} />
           <div className="ob-card">
-            <h2>¿Qué le gusta?</h2>
+            <h2>Queremos conocer cuáles son sus gustos</h2>
             <p>Cuéntanos sobre su vida cotidiana. Esto permite al equipo personalizar su cuidado y estimulación sensorial.</p>
             {CHIP_GROUPS.map(({ key, label, custom, placeholder }) => (
               <div className="field-group" key={key} style={key === "music" ? { marginTop: 16 } : undefined}>

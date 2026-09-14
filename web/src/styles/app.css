@@ -1772,3 +1772,51 @@
 /* Acceso discreto del equipo desde la pantalla de bienvenida (misma dirección para todos) */
 .staff-link { display: block; text-align: center; margin-top: 22px; font-size: 0.74rem; color: rgba(255,255,255,0.38); text-decoration: none; font-family: 'DM Sans', sans-serif; }
 .staff-link:hover, .staff-link:focus-visible { color: var(--mint); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Árbol familiar: franja "¿Necesitas un ejemplo?" y hoja con el ejemplo
+   ═══════════════════════════════════════════════════════════════════════ */
+.example-strip {
+  display: flex; align-items: center; gap: 10px; width: calc(100% - 16px); margin: 0 8px 18px;
+  background: rgba(255,255,255,0.05); border: 1.5px dashed rgba(144,224,239,0.35);
+  border-radius: 14px; padding: 12px 14px; cursor: pointer; text-align: left;
+  font-family: 'DM Sans', sans-serif; transition: background 0.18s, border-color 0.18s;
+}
+.example-strip:hover { background: rgba(255,255,255,0.08); border-color: var(--mint); }
+.example-strip-text { flex: 1; min-width: 0; }
+.example-strip-title { display: block; font-size: 0.85rem; font-weight: 600; color: var(--mist); }
+.example-strip-sub { display: block; font-size: 0.72rem; color: rgba(144,224,239,0.65); margin-top: 2px; line-height: 1.4; }
+
+.example-overlay {
+  position: fixed; inset: 0; z-index: 210; background: rgba(3,4,94,0.75); backdrop-filter: blur(6px);
+  display: flex; align-items: flex-end; animation: fadeUp 0.2s ease;
+}
+.example-sheet {
+  width: 100%; background: #071046; border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 24px 24px 0 0; padding: 18px 14px calc(24px + env(safe-area-inset-bottom));
+  max-height: 92vh; max-height: 92dvh; overflow-y: auto;
+  box-shadow: 0 -12px 48px rgba(0,0,0,0.45); animation: fadeUp 0.3s ease;
+}
+.example-handle { width: 40px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.25); margin: 0 auto 16px; }
+.example-title { font-family: 'DM Serif Display', serif; font-size: 1.25rem; font-weight: 400; color: var(--white); margin: 0 8px 6px; }
+.example-lead { color: var(--foam); font-size: 0.8rem; line-height: 1.55; margin: 0 8px 18px; }
+.example-genlbl { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); text-align: center; margin-bottom: 8px; }
+.example-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.example-node { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 72px; max-width: 84px; }
+.example-bub { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.25); flex-shrink: 0; }
+.example-bub.patient { width: 76px; height: 76px; border: 3px solid var(--mint); box-shadow: 0 0 0 6px rgba(0,180,216,0.15); }
+.example-name { font-size: 0.68rem; font-weight: 600; color: var(--white); text-align: center; line-height: 1.2; max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.example-role { font-size: 0.62rem; color: rgba(144,224,239,0.75); text-align: center; margin-top: -2px; }
+.example-role.patient { color: var(--mint); }
+.example-note {
+  display: flex; gap: 8px; align-items: flex-start; margin: 20px 8px 16px; padding: 11px 13px;
+  background: rgba(0,180,216,0.10); border: 1px solid rgba(0,180,216,0.25); border-radius: 12px;
+}
+.example-note p { color: var(--mist); font-size: 0.78rem; line-height: 1.55; margin: 0; }
+.example-sheet .ob-btn { width: calc(100% - 16px); margin: 0 8px; }
+
+/* En pantallas anchas la hoja se centra como diálogo */
+@media (min-width: 900px) {
+  .example-overlay { align-items: center; justify-content: center; padding: 24px; }
+  .example-sheet { max-width: 460px; border-radius: 24px; max-height: 86vh; }
+}

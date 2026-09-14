@@ -5,6 +5,7 @@
  * muestra el texto personalizado y las fotos se reducen antes de guardarse.
  */
 import { useRef, useState } from "react";
+import FamilyExample from "./FamilyExample.jsx";
 import { CATALOG } from "../data/defaults.js";
 import { fileToResizedDataUrl } from "../lib/image.js";
 import { displayRole } from "../lib/profile.js";
@@ -91,6 +92,7 @@ export default function FamilyTree({ treeNodes, setTreeNodes, patNick, showToast
   const [editBuf, setEditBuf] = useState({ label: "", role: "", roleCustom: "", emoji: "", photo: null });
   const [addingNode, setAddingNode] = useState(false);
   const [newNodeBuf, setNewNodeBuf] = useState({ label: "", role: "", roleCustom: "", gen: 1, emoji: "🧑", photo: null });
+  const [showExample, setShowExample] = useState(false);
 
   const gens = [0, 1, 2].map((g) => treeNodes.filter((n) => n.gen === g));
   const editing = treeNodes.find((n) => n.id === editingNode);
@@ -141,7 +143,16 @@ export default function FamilyTree({ treeNodes, setTreeNodes, patNick, showToast
   return (
     <div className="ob-card" style={{ padding: "20px 12px" }}>
       <h2 style={{ marginBottom: 4, fontSize: "1.2rem" }}>Árbol familiar</h2>
-      <p style={{ marginBottom: 20, fontSize: "0.8rem" }}>Toca cada persona para agregar foto, nombre y vínculo. Toca a {patNick} para ponerle su foto.</p>
+      <p style={{ marginBottom: 16, fontSize: "0.8rem" }}>Toca cada persona para agregar foto, nombre y vínculo. Toca a {patNick} para ponerle su foto.</p>
+
+      <button type="button" className="example-strip" onClick={() => setShowExample(true)} aria-haspopup="dialog">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#90E0EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg>
+        <span className="example-strip-text">
+          <span className="example-strip-title">¿Necesitas un ejemplo?</span>
+          <span className="example-strip-sub">Mira cómo quedó el árbol de otra familia</span>
+        </span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#90E0EF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
 
       {gens[0].length > 0 && (<><Row nodes={gens[0]} title={GEN_LABELS[0]} /><LineV /></>)}
       <Row nodes={gens[1]} title={`${patNick} y su generación`} />
@@ -191,6 +202,8 @@ export default function FamilyTree({ treeNodes, setTreeNodes, patNick, showToast
           </div>
         </div>
       )}
+
+      {showExample && <FamilyExample onClose={() => setShowExample(false)} />}
 
       {addingNode && (
         <div className="tree-edit-panel" style={{ marginTop: 16 }}>
