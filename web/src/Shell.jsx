@@ -46,6 +46,7 @@ export default function Shell({ form, treeNodes, checklist, setChecklist, prefs,
   const [activeTab, setActiveTab] = useState("home");
   const [modal, setModal] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [familyReturn, setFamilyReturn] = useState("profile");   // pestaña a la que vuelve el editor del árbol
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => { const main = document.querySelector(".main-content"); if (main) main.scrollTo({ top: 0 }); }, [activeTab]);
@@ -155,8 +156,8 @@ export default function Shell({ form, treeNodes, checklist, setChecklist, prefs,
             {activeTab === "journey" && <Journey etapa={session.etapa} steps={content.etapas} onOpenStep={(step) => setModal({ type: "journey-step", step })} onBack={() => go("home")} />}
             {activeTab === "videos" && <Videos videos={content.videos} onOpenVideo={(v) => setModal({ type: "video", v })} onBack={() => go("home")} />}
             {activeTab === "faq" && <Faq faq={content.faq} onBack={() => go("home")} />}
-            {activeTab === "profile" && <Profile form={form} treeNodes={treeNodes} session={session} mode={mode} sync={sync} config={config} onOpenSidebar={() => setSidebarOpen(true)} onOpenModal={(k) => setModal({ type: k })} onNavigate={go} onLogout={onLogout} onSyncNow={onSyncNow} showToast={showToast} />}
-            {activeTab === "family" && <Family key={session.updatedAt || "family"} treeNodes={treeNodes} patNick={nick} showToast={showToast} saving={sync.busy} onSave={async (draft) => { await onSaveProfile(null, null, draft); go("profile"); }} onBack={() => go("profile")} />}
+            {activeTab === "profile" && <Profile form={form} treeNodes={treeNodes} session={session} mode={mode} sync={sync} config={config} onOpenSidebar={() => setSidebarOpen(true)} onOpenModal={(k) => setModal({ type: k })} onNavigate={(tab) => { if (tab === "family") setFamilyReturn("profile"); go(tab); }} onLogout={onLogout} onSyncNow={onSyncNow} showToast={showToast} />}
+            {activeTab === "family" && <Family key={session.updatedAt || "family"} treeNodes={treeNodes} patNick={nick} showToast={showToast} saving={sync.busy} backLabel={familyReturn === "profile" ? "← Perfil" : "← Volver"} onSave={async (draft) => { await onSaveProfile(null, null, draft); go(familyReturn); }} onBack={() => go(familyReturn)} />}
             {activeTab === "eol" && <Eol onBack={() => go("home")} />}
             {activeTab === "post" && <Post onBack={() => go("home")} />}
             {activeTab === "ficha" && <Ficha form={form} treeNodes={treeNodes} patFirst={patFirst} config={config} onBack={() => go("home")} />}
@@ -239,8 +240,14 @@ export default function Shell({ form, treeNodes, checklist, setChecklist, prefs,
         <Toast message={toast} />
 
         {sidebarOpen && (
-          <ProfileSidebar form={form} prefs={prefs} patNick={nick} saving={sync.busy}
+          <ProfileSidebar form={form} prefs={prefs} patNick={nick} treeNodes={treeNodes} saving={sync.busy}
             onSave={async (draftForm, draftPrefs) => { setSidebarOpen(false); await onSaveProfile(draftForm, draftPrefs, null); }}
+            onEditFamily={async (draftForm, draftPrefs, dirty) => {
+              setSidebarOpen(false);
+              if (dirty) await onSaveProfile(draftForm, draftPrefs, null);   // no se pierde lo escrito en el panel
+              setFamilyReturn(activeTab === "family" ? "profile" : activeTab);
+              go("family");
+            }}
             onClose={() => setSidebarOpen(false)} />
         )}
       </div>

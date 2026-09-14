@@ -2,12 +2,12 @@ import { useState } from "react";
 import FamilyTree from "../components/FamilyTree.jsx";
 
 /** Edición del árbol familiar después del onboarding. Trabaja sobre un borrador; aplica al guardar. */
-export default function Family({ treeNodes, patNick, showToast, saving, onSave, onBack }) {
+export default function Family({ treeNodes, patNick, showToast, saving, onSave, onBack, backLabel = "← Perfil" }) {
   const [draft, setDraft] = useState(() => treeNodes.map((n) => ({ ...n })));
   return (
     <div className="screen" style={{ background: "var(--ocean)", minHeight: "100%" }}>
       <div className="screen-header" style={{ paddingBottom: 12 }}>
-        <button className="back-btn" onClick={onBack}>← Perfil</button>
+        <button className="back-btn" onClick={onBack}>{backLabel}</button>
         <h1>Árbol familiar</h1>
         <p>Quiénes acompañan a {patNick}</p>
       </div>

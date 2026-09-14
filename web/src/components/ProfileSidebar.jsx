@@ -4,6 +4,7 @@
  */
 import { useState } from "react";
 import { CATALOG, CUSTOM_PREFIX } from "../data/defaults.js";
+import { displayRole } from "../lib/profile.js";
 
 const CHIP_SECTIONS = [
   { key: "music",  title: "🎵 Música",                    placeholder: "Ej: Jazz, Cueca, Trap..." },
@@ -12,12 +13,16 @@ const CHIP_SECTIONS = [
   { key: "social", title: "👥 Vida social y espiritual",  placeholder: "Ej: Club de adultos mayores, Coro..." },
 ];
 
-export default function ProfileSidebar({ form, prefs, patNick, saving, onSave, onClose }) {
+export default function ProfileSidebar({ form, prefs, patNick, treeNodes = [], saving, onSave, onEditFamily, onClose }) {
   const [draft, setDraft] = useState({ ...form });
   const [draftPrefs, setDraftPrefs] = useState({ ...prefs });
   const [customInputs, setCustomInputs] = useState({ music: "", sport: "", daily: "", social: "" });
 
   const set = (key, val) => setDraft((d) => ({ ...d, [key]: val }));
+  // ¿Hay cambios sin guardar en el panel? Se usa al saltar al editor del árbol.
+  const dirty = JSON.stringify(draft) !== JSON.stringify(form) || JSON.stringify(draftPrefs) !== JSON.stringify(prefs);
+  const familia = treeNodes.filter((n) => n.id !== "pat" && (n.label || n.photo));
+  const paciente = treeNodes.find((n) => n.id === "pat");
   const toggleIn = (key, val) => setDraft((d) => {
     const cur = d[key] || [];
     return { ...d, [key]: cur.includes(val) ? cur.filter((x) => x !== val) : [...cur, val] };
@@ -59,6 +64,34 @@ export default function ProfileSidebar({ form, prefs, patNick, saving, onSave, o
               </select>
             </div>
           </div>
+
+          {onEditFamily && (
+            <div className="sidebar-section">
+              <div className="sidebar-section-title">👨‍👩‍👧 Árbol familiar</div>
+              <div className="sidebar-family-row" aria-label="Personas en el árbol familiar">
+                {paciente && (
+                  <div className="sidebar-family-item patient">
+                    <div className="sidebar-family-avatar">{paciente.photo ? <img src={paciente.photo} alt="" /> : <span>{paciente.emoji || "🙂"}</span>}</div>
+                    <div className="sidebar-family-name">{patNick}</div>
+                    <div className="sidebar-family-role">Paciente</div>
+                  </div>
+                )}
+                {familia.slice(0, 7).map((n) => (
+                  <div className="sidebar-family-item" key={n.id}>
+                    <div className="sidebar-family-avatar">{n.photo ? <img src={n.photo} alt="" /> : <span>{n.emoji || "🧑"}</span>}</div>
+                    <div className="sidebar-family-name">{n.label || "—"}</div>
+                    <div className="sidebar-family-role">{displayRole(n)}</div>
+                  </div>
+                ))}
+              </div>
+              {familia.length === 0 && <p className="sidebar-family-empty">Aún no has agregado a nadie. El árbol ayuda al equipo a nombrar a las personas cercanas cuando le habla a {patNick}.</p>}
+              {familia.length > 7 && <p className="sidebar-family-empty">y {familia.length - 7} más</p>}
+              <button type="button" className="sidebar-family-btn" onClick={() => onEditFamily(draft, draftPrefs, dirty)}>
+                {dirty ? "Guardar cambios y editar el árbol →" : "Editar árbol familiar →"}
+              </button>
+              <p className="sidebar-family-hint">Fotos, nombres y vínculos de quienes acompañan a {patNick}.</p>
+            </div>
+          )}
 
           {CHIP_SECTIONS.map(({ key, title, placeholder }) => (
             <div className="sidebar-section" key={key}>
