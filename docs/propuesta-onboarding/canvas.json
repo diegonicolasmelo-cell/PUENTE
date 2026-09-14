@@ -1,0 +1,84 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "1 · Bienvenida",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 900
+    },
+    {
+      "file": "Familiar.dc.html",
+      "title": "2 · Quién es tu familiar",
+      "x": 510,
+      "y": 0,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Gustos.dc.html",
+      "title": "3 · Sus gustos",
+      "x": 1020,
+      "y": 0,
+      "w": 390,
+      "h": 940
+    },
+    {
+      "file": "Arbol.dc.html",
+      "title": "4 · Árbol familiar",
+      "x": 1530,
+      "y": 0,
+      "w": 390,
+      "h": 990
+    },
+    {
+      "file": "Ejemplo.dc.html",
+      "title": "5 · Ejemplo: familia de Juan",
+      "x": 2040,
+      "y": 0,
+      "w": 390,
+      "h": 844
+    }
+  ],
+  "annotations": [
+    {
+      "id": "n1",
+      "x": 0,
+      "y": -230,
+      "w": 430,
+      "text": "PANTALLA 1 · BIENVENIDA\n· Nuevo titular \"Somos Puente UCI\" bajo el logo.\n· Nueva línea antes de \"No estás solo/a\": \"Sabemos que tu familiar está en nuestra UCI, queremos saber quién eres\".\n· La confidencialidad sale del párrafo y pasa a un recuadro con candado, ANTES de los campos: se lee antes de escribir, no después."
+    },
+    {
+      "id": "n2",
+      "x": 510,
+      "y": -230,
+      "w": 430,
+      "text": "PANTALLA 2 · TU FAMILIAR\n· \"Saber quién es como persona...\" pasa a ser el titular, en el formato de \"¿Cómo se llama?\". Se quita el párrafo de abajo para no repetir la idea.\n· Etiquetas nuevas: \"¿Cómo se llama tu familiar?\" y \"¿A qué se dedica? ¿En qué trabaja?\".\n· El titular completo ocupa 3 líneas. Ver el punto 2 del feedback."
+    },
+    {
+      "id": "n3",
+      "x": 1020,
+      "y": -230,
+      "w": 430,
+      "text": "PANTALLA 3 · GUSTOS\n· Titular: \"Queremos conocer cuáles son sus gustos\" en vez de \"¿Qué le gusta?\".\n· Todo lo demás queda igual."
+    },
+    {
+      "id": "n4",
+      "x": 1530,
+      "y": -230,
+      "w": 430,
+      "text": "PANTALLA 4 · ÁRBOL\n· Nueva franja \"¿Necesitas un ejemplo?\" sobre el árbol, con el mismo lenguaje visual del botón \"Agregar familiar\".\n· No empuja el árbol hacia abajo: al tocarla se abre una hoja sobre la pantalla (tablero 5) y se cierra sin perder nada de lo escrito."
+    },
+    {
+      "id": "n5",
+      "x": 2040,
+      "y": -230,
+      "w": 470,
+      "text": "PANTALLA 5 · EJEMPLO\nLa familia de Juan: Pedro y Javiera (padres), Juan entre María y Javier, y sus hijos Luis, José y Raúl.\n\nLos retratos son ILUSTRACIONES, no fotos de personas reales: una foto real dentro de la app exigiría consentimiento de quien aparece y envejece mal. Ver el punto 5 del feedback."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}
