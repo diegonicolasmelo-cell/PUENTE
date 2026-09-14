@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap">
+  <style>
+    body { margin: 0; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #00B4D8; } a:hover { color: #90E0EF; }
+    svg { display: block; }
+    .ob { width: 390px; box-sizing: border-box; background: #03045E; color: #FFFFFF; padding: 40px 24px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.15; pointer-events: none; }
+    .dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 32px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+    .dot.on { background: #00B4D8; width: 24px; border-radius: 4px; }
+    .step { width: 100%; max-width: 400px; }
+    .serif { font-family: 'DM Serif Display', Georgia, serif; }
+    .wordmark { font-family: 'DM Serif Display', Georgia, serif; color: #FFFFFF; letter-spacing: 0.02em; line-height: 1; }
+    .wordmark span { color: #00B4D8; }
+    .tagline { text-align: center; color: #90E0EF; font-size: 15px; line-height: 1.6; margin-bottom: 40px; }
+    .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 28px; margin-bottom: 20px; }
+    .card h2 { font-family: 'DM Serif Display', Georgia, serif; font-size: 22px; color: #FFFFFF; margin: 0 0 6px; font-weight: 400; line-height: 1.25; }
+    .card p { color: #90E0EF; font-size: 14px; line-height: 1.6; margin: 0 0 20px; }
+    .fg { margin-bottom: 16px; }
+    .lbl { display: block; font-size: 12px; font-weight: 600; color: #00B4D8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .inp { width: 100%; box-sizing: border-box; padding: 12px 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: rgba(255,255,255,0.35); font-size: 14.8px; }
+    .btn { width: 100%; box-sizing: border-box; padding: 16px; background: #00B4D8; border: none; border-radius: 14px; font-size: 16px; font-weight: 600; color: #03045E; text-align: center; font-family: inherit; }
+    .btn-ghost { width: 100%; box-sizing: border-box; padding: 14px; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 14px; font-size: 14.4px; color: #90E0EF; text-align: center; margin-top: 8px; }
+    .link { display: block; width: 100%; text-align: center; margin-top: 14px; color: rgba(144,224,239,0.8); font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+    .staff { display: block; text-align: center; margin-top: 22px; font-size: 11.8px; color: rgba(255,255,255,0.38); }
+    .conf { display: flex; gap: 10px; align-items: flex-start; background: rgba(0,180,216,0.10); border: 1px solid rgba(0,180,216,0.28); border-radius: 12px; padding: 12px 14px; margin-bottom: 20px; }
+    .conf p { color: #CAF0F8; font-size: 12.8px; line-height: 1.55; margin: 0; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); color: #90E0EF; font-size: 13.6px; }
+    .chip.sel { background: #00B4D8; border-color: #00B4D8; color: #03045E; font-weight: 600; }
+    .genlbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); text-align: center; margin-bottom: 8px; }
+    .row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .node { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 72px; max-width: 84px; }
+    .bub { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2); font-size: 24px; color: rgba(255,255,255,0.5); }
+    .bub.filled { background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.25); }
+    .bub.pat { width: 76px; height: 76px; background: rgba(0,180,216,0.25); border: 3px solid #00B4D8; box-shadow: 0 0 0 6px rgba(0,180,216,0.15); }
+    .pen { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; border-radius: 50%; background: #0077B6; border: 1.5px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 9px; }
+    .pen.empty { background: rgba(255,255,255,0.15); }
+    .nm { font-size: 11px; font-weight: 600; color: #FFFFFF; text-align: center; line-height: 1.2; max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nm.empty { color: rgba(255,255,255,0.35); }
+    .rl { font-size: 10px; color: rgba(144,224,239,0.75); text-align: center; margin-top: -2px; }
+    .rl.pat { color: #00B4D8; }
+    .linev { display: flex; justify-content: center; padding: 4px 0; }
+    .linev div { width: 2px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 1px; }
+    .addbtn { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,180,216,0.12); border: 1.5px dashed rgba(0,180,216,0.4); border-radius: 12px; padding: 8px 20px; color: #00B4D8; font-size: 13.1px; font-weight: 600; }
+    .example-strip { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); border: 1.5px dashed rgba(144,224,239,0.35); border-radius: 14px; padding: 12px 14px; margin-bottom: 18px; }
+    .example-strip .t { font-size: 13.6px; font-weight: 600; color: #CAF0F8; }
+    .example-strip .s { font-size: 11.6px; color: rgba(144,224,239,0.65); margin-top: 2px; }
+    .note { display:flex; gap:10px; align-items:flex-start; background: rgba(0,180,216,0.10); border:1px solid rgba(0,180,216,0.28); border-radius:12px; padding:12px 14px; margin-bottom:20px; }
+    .note p { color:#CAF0F8; font-size:12.8px; line-height:1.55; margin:0; }
+    .code-box { background: rgba(255,255,255,0.06); border:1.5px dashed rgba(0,180,216,0.5); border-radius:16px; padding:18px 16px; text-align:center; margin-bottom:14px; }
+    .code-lbl { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(144,224,239,0.7); margin-bottom:8px; }
+    .code-val { font-family:'DM Serif Display',Georgia,serif; font-size:30px; letter-spacing:0.14em; color:#fff; }
+    .code-hint { font-size:12px; color:rgba(202,240,248,0.75); line-height:1.5; margin-top:8px; }
+    .skip { display:block; text-align:center; margin-top:10px; color:rgba(144,224,239,0.7); font-size:12.8px; text-decoration:underline; text-underline-offset:3px; }
+  </style>
+</helmet>
+
+<div class="ob" style="min-height:844px">
+  <div class="blob" style="width:300px;height:300px;background:#0077B6;top:-80px;right:-80px"></div><div class="blob" style="width:200px;height:200px;background:#02C39A;bottom:60px;left:-60px"></div><div class="blob" style="width:150px;height:150px;background:#6D28D9;bottom:180px;right:20px"></div>
+  <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot on"></div></div>
+  <div class="step">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:52px;line-height:1">💙</div>
+      <div class="serif" style="font-size:32px;color:#fff;margin-top:8px">¡Listo, María!</div>
+      <p class="tagline" style="margin-bottom:0;margin-top:8px">El perfil de <strong style="color:#00B4D8">Carlos Pérez Soto</strong> fue creado.</p>
+    </div>
+    <div class="code-box">
+      <div class="code-lbl">Tu código de acceso</div>
+      <div class="code-val">A7KD-3PQX</div>
+      <div class="code-hint">Guárdalo: con él puedes volver a entrar desde cualquier teléfono.</div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h2 style="font-size:19px">¿Quieres que el equipo pueda avisarte?</h2>
+      <p style="margin-bottom:14px">Si dejas tu WhatsApp, el equipo podrá escribirte cuando necesite algo para Carlos. También verás los avisos al abrir la app.</p>
+      <div class="note" style="margin-bottom:14px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00B4D8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><p>Solo lo usa el equipo de la UCI. Puedes dejarlo en blanco y agregarlo después.</p></div>
+      <div class="fg" style="margin-bottom:0"><span class="lbl">WhatsApp (opcional)</span><div class="inp">+56 9 1234 5678</div></div>
+    </div>
+    <div class="btn">Entrar a Puente UCI →</div>
+    <div class="skip">Prefiero no dejarlo</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

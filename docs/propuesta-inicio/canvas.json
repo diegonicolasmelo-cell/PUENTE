@@ -1,0 +1,54 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "1 · Inicio (cambio pedido)",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Pantalla2.dc.html",
+      "title": "2 · Consecuencia en la siguiente",
+      "x": 510,
+      "y": 0,
+      "w": 390,
+      "h": 800
+    },
+    {
+      "file": "Whatsapp.dc.html",
+      "title": "3 · Dónde queda el WhatsApp",
+      "x": 1020,
+      "y": 0,
+      "w": 390,
+      "h": 900
+    }
+  ],
+  "annotations": [
+    {
+      "id": "a1",
+      "x": 0,
+      "y": -250,
+      "w": 440,
+      "text": "EL CAMBIO PEDIDO\nEl campo de WhatsApp se reemplaza por \"Nombre de tu familiar que está en la UCI\".\n\nEl párrafo de arriba decía \"cómo te llamas y cómo contactarte\": ya no hay nada de contacto, así que pasa a \"quién eres tú y a quién vienes a acompañar\"."
+    },
+    {
+      "id": "a2",
+      "x": 510,
+      "y": -250,
+      "w": 440,
+      "text": "CONSECUENCIA: NO PREGUNTAR DOS VECES\nLa pantalla 2 ya pedía el nombre del paciente. Si se pide en la 1, aquí hay que quitarlo o la familia lo escribe dos veces.\n\nVentaja: al tener el nombre antes, esta pantalla puede saludar por él (\"Cuéntanos de Carlos\") y queda más corta, con dos campos en vez de tres."
+    },
+    {
+      "id": "a3",
+      "x": 1020,
+      "y": -250,
+      "w": 470,
+      "text": "EL WHATSAPP NO ES DECORATIVO\nEs lo que usa el botón \"Avisar por WhatsApp\" del panel del equipo. Sin número, ese botón queda apagado y el único aviso es abrir la app.\n\nPropuesta: preguntarlo al final, junto al código de acceso, donde \"cómo te avisamos\" tiene sentido y ya no compite con el registro. Sigue siendo opcional y editable en Editar perfil."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}
