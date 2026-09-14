@@ -60,17 +60,22 @@ export default function Onboarding({ form, setForm, treeNodes, setTreeNodes, toa
           <p className="ob-tagline">Conectando familias con el cuidado humanizado.<br />No estás solo/a en este camino.</p>
           <div className="ob-card">
             <h2>¿Quién eres?</h2>
-            <p>Cuéntanos cómo te llamas y cómo contactarte. Esta información es solo para el equipo de salud.</p>
+            <p>Cuéntanos quién eres tú y a quién vienes a acompañar.</p>
+            <div className="ob-note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00B4D8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg><p>Esta información es solo para el equipo de salud.</p></div>
             <div className="field-group">
               <label className="field-label" htmlFor="ob-fam-name">Tu nombre</label>
               <input id="ob-fam-name" className="field-input" placeholder="Ej: María González" value={form.famName} onChange={(e) => setForm((f) => ({ ...f, famName: e.target.value }))} />
             </div>
             <div className="field-group">
-              <label className="field-label" htmlFor="ob-fam-phone">WhatsApp (opcional)</label>
-              <input id="ob-fam-phone" className="field-input" inputMode="tel" placeholder="+56 9 1234 5678" value={form.famPhone} onChange={(e) => setForm((f) => ({ ...f, famPhone: e.target.value }))} />
+              <label className="field-label" htmlFor="ob-pat-name">Nombre de tu familiar que está en la UCI</label>
+              <input id="ob-pat-name" className="field-input" placeholder="Ej: Carlos Pérez Soto" value={form.patName} onChange={(e) => setForm((f) => ({ ...f, patName: e.target.value }))} />
             </div>
           </div>
-          <button className="ob-btn" onClick={() => { if (!form.famName.trim()) { showToast("⚠️ Ingresa tu nombre para continuar"); return; } setObStep(1); }}>Continuar →</button>
+          <button className="ob-btn" onClick={() => {
+            if (!form.famName.trim()) { showToast("⚠️ Ingresa tu nombre para continuar"); return; }
+            if (!form.patName.trim()) { showToast("⚠️ Ingresa el nombre de tu familiar"); return; }
+            setObStep(1);
+          }}>Continuar →</button>
           {mode !== "local" && <button className="code-entry-link" onClick={() => setRestoring(true)}>Ya tengo un código de acceso</button>}
           {mode !== "gas" && <a className="staff-link" href={import.meta.env.BASE_URL + "equipo.html"}>¿Eres del equipo de salud? Entrar al panel</a>}
         </div>
@@ -97,12 +102,8 @@ export default function Onboarding({ form, setForm, treeNodes, setTreeNodes, toa
         <div className="ob-step active">
           <Header tagline="Queremos conocer a tu familiar más allá de su diagnóstico" style={{ marginBottom: 24 }} />
           <div className="ob-card">
-            <h2>¿Cómo se llama?</h2>
+            <h2>Cuéntanos de {form.patName.trim().split(" ")[0] || "tu familiar"}</h2>
             <p>Saber quién es como persona nos permite brindarle un cuidado más humano y personalizado.</p>
-            <div className="field-group">
-              <label className="field-label" htmlFor="ob-pat-name">Nombre completo</label>
-              <input id="ob-pat-name" className="field-input" placeholder="Ej: Carlos Pérez Soto" value={form.patName} onChange={(e) => setForm((f) => ({ ...f, patName: e.target.value }))} />
-            </div>
             <div className="field-group">
               <label className="field-label" htmlFor="ob-pat-nick">¿Cómo le gusta que le llamen?</label>
               <input id="ob-pat-nick" className="field-input" placeholder="Apodo o nombre preferido" value={form.patNick} onChange={(e) => setForm((f) => ({ ...f, patNick: e.target.value }))} />
@@ -112,7 +113,7 @@ export default function Onboarding({ form, setForm, treeNodes, setTreeNodes, toa
               <input id="ob-pat-job" className="field-input" placeholder="Profesión u ocupación" value={form.patJob} onChange={(e) => setForm((f) => ({ ...f, patJob: e.target.value }))} />
             </div>
           </div>
-          <button className="ob-btn" onClick={() => { if (!form.patName.trim()) { showToast("⚠️ Ingresa el nombre del paciente"); return; } setObStep(2); }}>Continuar →</button>
+          <button className="ob-btn" onClick={() => setObStep(2)}>Continuar →</button>
           <button className="ob-btn-ghost" onClick={() => setObStep(0)}>← Volver</button>
         </div>
       )}
@@ -251,15 +252,20 @@ export default function Onboarding({ form, setForm, treeNodes, setTreeNodes, toa
             </div>
           )}
 
-          <div className="ob-card" style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "2rem", marginBottom: 8 }}>🤝</div>
-            <h2 style={{ marginBottom: 12 }}>Tu espacio seguro</h2>
-            <p>Desde aquí podrás acceder a información sobre la UCI, entender el proceso de tu familiar y resolver tus dudas en cualquier momento.</p>
+          <div className="ob-card">
+            <h2 style={{ fontSize: "1.2rem" }}>¿Quieres que el equipo pueda avisarte?</h2>
+            <p style={{ marginBottom: 14 }}>Si dejas tu WhatsApp, el equipo podrá escribirte cuando necesite algo para {nick}. También verás los avisos al abrir la app.</p>
+            <div className="ob-note" style={{ marginBottom: 14 }}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00B4D8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg><p>Solo lo usa el equipo de la UCI. Puedes dejarlo en blanco y agregarlo después desde tu perfil.</p></div>
+            <div className="field-group" style={{ marginBottom: 0 }}>
+              <label className="field-label" htmlFor="ob-fam-phone">WhatsApp (opcional)</label>
+              <input id="ob-fam-phone" className="field-input" inputMode="tel" placeholder="+56 9 1234 5678" value={form.famPhone} onChange={(e) => setForm((f) => ({ ...f, famPhone: e.target.value }))} />
+            </div>
           </div>
           <div className="ob-card" style={{ background: "rgba(0,180,216,0.1)", border: "1px solid rgba(0,180,216,0.3)" }}>
             <p style={{ color: "#CAF0F8", fontSize: "0.85rem", lineHeight: 1.7 }}>❤️ <em>"Cuidar a quien cuida es también cuidar al paciente. No estás solo/a en este proceso."</em></p>
           </div>
-          <button className="ob-btn" onClick={onEnter}>Entrar a Puente UCI →</button>
+          <button className="ob-btn" onClick={() => onEnter(form.famPhone.trim())}>Entrar a Puente UCI →</button>
+          {form.famPhone.trim() === "" && <button className="code-entry-link" onClick={() => onEnter("")}>Prefiero no dejarlo</button>}
         </div>
       )}
 

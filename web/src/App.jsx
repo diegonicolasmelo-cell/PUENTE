@@ -271,7 +271,14 @@ export default function App() {
       <Onboarding
         form={form} setForm={setForm} treeNodes={treeNodes} setTreeNodes={setTreeNodes}
         toast={toast} showToast={showToast} mode={mode} busy={sync.busy} session={session}
-        onCreate={createProfile} onRestore={restoreWithCode} onEnter={() => setPhase("app")}
+        onCreate={createProfile} onRestore={restoreWithCode}
+        onEnter={(phone) => {
+          // El WhatsApp se pide al final del registro: si lo dejó, se guarda y se sube con el perfil ya creado
+          const f = { ...latest.current.form, famPhone: phone || "" };
+          setForm(f);
+          setPhase("app");
+          if (phone) syncNow({ overrides: { form: f } });
+        }}
       />
     );
   }
